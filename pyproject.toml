@@ -30,7 +30,7 @@ classifiers = [
 ]
 dependencies = [
     "cffi >= 1.12.0; platform_python_implementation != 'PyPy'",
-    "pywayland >= 0.4.14",
+    "pywayland @ git+https://github.com/RFCreate/pywayland",
     "xkbcommon >= 0.2",
 ]
 dynamic = ["version"]

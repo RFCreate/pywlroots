@@ -1,2 +1,2 @@
-pywayland>=0.4.14
+git+https://github.com/RFCreate/pywayland
 xkbcommon>=0.2
