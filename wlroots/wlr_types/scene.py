@@ -205,7 +205,7 @@ T = TypeVar("T")
 BufferCallback = Callable[[SceneBuffer, int, int, T], None]
 
 
-@ffi.def_extern()  # type: ignore[misc]
+@ffi.def_extern()  # type: ignore[untyped-decorator]
 def buffer_iterator_callback(
     buffer_ptr: ffi.CData, sx: int, sy: int, data_ptr: ffi.CData
 ) -> None:

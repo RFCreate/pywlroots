@@ -22,7 +22,7 @@ T = TypeVar("T")
 SurfaceCallback = Callable[[Surface, int, int, T], None]
 
 
-@ffi.def_extern()  # type: ignore[misc]
+@ffi.def_extern()  # type: ignore[untyped-decorator]
 def surface_iterator_callback(
     surface_ptr: ffi.CData, sx: int, sy: int, data_ptr: ffi.CData
 ) -> None:

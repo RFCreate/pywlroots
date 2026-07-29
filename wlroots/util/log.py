@@ -7,7 +7,7 @@ from wlroots import ffi, lib
 logger = logging.getLogger("wlroots")
 
 
-@ffi.def_extern()  # type: ignore[misc]
+@ffi.def_extern()  # type: ignore[untyped-decorator]
 def log_func_callback(importance: int, formatted_str: ffi.CData) -> None:
     """Callback that logs the string at the given level"""
     log_str = ffi.string(formatted_str).decode()
