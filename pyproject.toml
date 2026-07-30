@@ -6,7 +6,8 @@ requires = [
     "pywayland>=0.4.14",
     "xkbcommon",
 ]
-build-backend = "setuptools.build_meta"
+build-backend = "build_backend"
+backend-path = ["."]
 
 [project]
 name = "pywlroots"

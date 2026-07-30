@@ -168,7 +168,6 @@ jobs:
           echo "XDG_RUNTIME_DIR=/tmp" >> $GITHUB_ENV
       - name: Install Python dependencies
         run: |
-          python protocol_headers.py --generate
           pip install -e .[test]
       - name: Run unit tests
         run: pytest -Wall
@@ -235,7 +234,6 @@ jobs:
           python-version: ${{ env.python-version }}
       - name: Install Python dependencies
         run: |
-          python protocol_headers.py --generate
           pip install -e .[packaging]
       - name: Run packaging test
         run: |

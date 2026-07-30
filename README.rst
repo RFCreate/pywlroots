@@ -21,12 +21,12 @@ headers to be installed.  At installation time, the cffi binding is compiled
 against these libraries.
 
 To build pywlroots from source, generated Wayland and wlroots protocol headers
-and install with pip to compile the required cffi bindings.
+and compile the required cffi bindings.
 
 .. code-block::
 
     python protocol_headers.py --generate
-    pip install -e .
+    python wlroots/ffi_build.py
 
 Versioning and Releases
 -----------------------
