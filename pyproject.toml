@@ -58,7 +58,7 @@ include = ["wlroots*"]
 wlroots = ["py.typed", "include/*.h"]
 
 [tool.setuptools.dynamic]
-version = {attr = "version.version"}
+version = {attr = "wlroots.version.version"}
 
 [tool.ruff]
 # E/W pycodestyle errors + warnings
