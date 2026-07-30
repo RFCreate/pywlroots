@@ -26,7 +26,6 @@ jobs:
           dnf -y install almalinux-release-devel
           yum -y install \
             hwdata \
-            python3-pip \
             libepoxy-devel \
             libffi-devel \
             libinput-devel \
@@ -49,6 +48,7 @@ jobs:
             xcb-util-wm-devel \
             xorg-x11-font-utils \
             xorg-x11-xtrans-devel \
+            meson \
             ninja-build \
             wget
       - name: Set environment variables
@@ -87,71 +87,60 @@ jobs:
           SEATD_URL: https://git.sr.ht/~kennylevinsen/seatd/archive/${{ env.seatd-version }}.tar.gz
           PIXMAN_URL: https://gitlab.freedesktop.org/pixman/pixman/-/archive/pixman-${{ env.pixman-version }}/pixman-pixman-${{ env.pixman-version }}.tar.bz2
           WLROOTS_URL: https://gitlab.freedesktop.org/wlroots/wlroots/-/archive/${{ env.wlroots-version }}/wlroots-${{ env.wlroots-version }}.tar.gz
-      - name: Install meson
-        run: |
-          pip3 install meson
       - name: Build wayland
         working-directory: wayland-${{ env.wayland-version }}
         run: |
           meson setup build --prefix=/usr -Ddocumentation=false
-          ninja -C build
           DESTDIR=~/wayland ninja -C build install
           ninja -C build install
       - name: Build wayland-protocols
         working-directory: wayland-protocols-${{ env.wayland-protocols-version }}
         run: |
           meson setup build --prefix=/usr
-          ninja -C build
           DESTDIR=~/wayland ninja -C build install
           ninja -C build install
       - name: Build libdrm
         working-directory: libdrm-libdrm-${{ env.libdrm-version }}
         run: |
           meson setup build --prefix=/usr
-          ninja -C build
           DESTDIR=~/wayland ninja -C build install
           ninja -C build install
       - name: Build seatd
         working-directory: seatd-${{ env.seatd-version }}
         run: |
           meson setup build --prefix=/usr
-          ninja -C build
           DESTDIR=~/wayland ninja -C build install
           ninja -C build install
       - name: Build pixman
         working-directory: pixman-pixman-${{ env.pixman-version }}
         run: |
           meson setup build --prefix=/usr
-          ninja -C build
           DESTDIR=~/wayland ninja -C build install
           ninja -C build install
       - name: Build inputproto
         working-directory: xorgproto-xorgproto-${{ env.inputproto-version }}
         run: |
           meson setup build --prefix=/usr
-          ninja -C build
           DESTDIR=~/wayland ninja -C build install
           ninja -C build install
       - name: Build libxcvt
         working-directory: libxcvt-libxcvt-${{ env.xcvt-version }}
         run: |
           meson setup build --prefix=/usr
-          ninja -C build
           DESTDIR=~/wayland ninja -C build install
           ninja -C build install
       - name: Build xwayland
         working-directory: xserver-xwayland-${{ env.xwayland-version }}
         run: |
           meson setup build --prefix=/usr
-          ninja -C build
           DESTDIR=~/wayland ninja -C build install
           ninja -C build install
       - name: Build wlroots
         working-directory: wlroots-${{ env.wlroots-version }}
         run: |
           meson setup build --prefix=/usr -Dxwayland=enabled
-          ninja -C build
           DESTDIR=~/wayland ninja -C build install
+          ninja -C build install
       - name: Create artifact
         run: tar czf ~/wayland.tar.gz -C ${HOME}/wayland/ .
       - name: Upload built libraries
@@ -202,12 +191,12 @@ jobs:
           pip install auditwheel build
       - name: Build wheels
         run: |
+          echo "xkbcommon<1.1" > constraints.txt
+          export PIP_CONSTRAINT="$(pwd)/constraints.txt"
           python -m build --wheel
           ls dist/
           auditwheel show dist/pywlroots-*.whl
           auditwheel repair --plat manylinux_2_34_x86_64 -w output_wheels dist/pywlroots-*.whl
-        env:
-          PIP_CONSTRAINT: dist-build-constraints.txt
       - name: Upload wheel
         uses: actions/upload-artifact@v4
         with:
@@ -259,12 +248,12 @@ jobs:
           pip install auditwheel build
       - name: Build wheels
         run: |
+          echo "xkbcommon<1.1" > constraints.txt
+          export PIP_CONSTRAINT="$(pwd)/constraints.txt"
           python -m build --wheel
           ls dist/
           auditwheel show dist/pywlroots-*.whl
           auditwheel repair --plat manylinux_2_34_x86_64 -w output_wheels dist/pywlroots-*.whl
-        env:
-          PIP_CONSTRAINT: dist-build-constraints.txt
       - name: Upload wheel
         uses: actions/upload-artifact@v4
         with:
@@ -305,9 +294,7 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - name: Install wheel
-        run: |
-          pip install pywlroots-*.whl
-          pip install setuptools
+        run: pip install pywlroots-*.whl
       - name: Check installation
         shell: python
         run: |
@@ -357,9 +344,9 @@ jobs:
           pip install build
       - name: Build source
         run: |
+          echo "xkbcommon<1.1" > constraints.txt
+          export PIP_CONSTRAINT="$(pwd)/constraints.txt"
           python -m build --sdist
-        env:
-          PIP_CONSTRAINT: dist-build-constraints.txt
       - name: Upload source
         uses: actions/upload-artifact@v4
         with:

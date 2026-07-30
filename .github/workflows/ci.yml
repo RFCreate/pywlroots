@@ -78,22 +78,20 @@ jobs:
         working-directory: wayland-${{ env.wayland-version }}
         run: |
           meson setup build --prefix=/usr -Ddocumentation=false
-          ninja -C build
           DESTDIR=~/wayland ninja -C build install
           sudo ninja -C build install
       - name: Build wayland-protocols
         working-directory: wayland-protocols-${{ env.wayland-protocols-version }}
         run: |
           meson setup build --prefix=/usr
-          ninja -C build
           DESTDIR=~/wayland ninja -C build install
           sudo ninja -C build install
       - name: Build wlroots
         working-directory: wlroots-${{ matrix.wlroots-version }}
         run: |
           meson setup build --prefix=/usr -Dxwayland=enabled
-          ninja -C build
           DESTDIR=~/wayland ninja -C build install
+          sudo ninja -C build install
       - name: Create artifact
         run: tar czf ~/wayland.tar.gz -C ${HOME}/wayland/ .
       - name: Upload built libraries
@@ -161,7 +159,6 @@ jobs:
             libxfont-dev \
             libxkbcommon-dev \
             libxshmfence-dev \
-            meson \
             seatd \
             xfonts-utils \
             xserver-xorg-dev \
@@ -171,6 +168,7 @@ jobs:
           echo "XDG_RUNTIME_DIR=/tmp" >> $GITHUB_ENV
       - name: Install Python dependencies
         run: |
+          python protocol_headers.py --generate
           pip install -e .[test]
       - name: Run unit tests
         run: pytest -Wall
@@ -206,9 +204,6 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: ${{ env.python-version }}
-      - name: Install Python dependencies
-        run: |
-          pip install .
       - name: Run pre-commit test
         uses: pre-commit/action@v3.0.1
   packaging-test:
@@ -240,11 +235,11 @@ jobs:
           python-version: ${{ env.python-version }}
       - name: Install Python dependencies
         run: |
-          pip install .[packaging]
+          python protocol_headers.py --generate
+          pip install -e .[packaging]
       - name: Run packaging test
         run: |
           check-manifest
-          python setup.py check -m -s
           python -m build --sdist
           twine check dist/*
   protocol-headers-test:
@@ -279,5 +274,5 @@ jobs:
           sudo apt-get install -y --no-install-recommends pkgconf
       - name: Run protocol test
         run: |
-          python wlroots/include/check_headers.py --generate
-          python wlroots/include/check_headers.py --wlroots-dir wlroots-${{ env.wlroots-version }}
+          python protocol_headers.py --generate
+          python protocol_headers.py --wlroots-dir wlroots-${{ env.wlroots-version }} --check
