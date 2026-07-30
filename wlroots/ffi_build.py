@@ -3403,5 +3403,12 @@ ffi_builder.include(pywayland_ffi)
 ffi_builder.include(xkb_ffi)
 ffi_builder.cdef(CDEF)
 
+
+def ffi_compile(verbose: bool = False) -> None:
+    # Build into the project root so the generated module lands at
+    # wlroots/_ffi.* regardless of the current working directory.
+    ffi_builder.compile(tmpdir=Path(__file__).parent.parent.as_posix(), verbose=verbose)
+
+
 if __name__ == "__main__":
-    ffi_builder.compile()
+    ffi_compile()

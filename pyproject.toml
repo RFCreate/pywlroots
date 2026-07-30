@@ -56,7 +56,7 @@ zip-safe = false
 include = ["wlroots*"]
 
 [tool.setuptools.package-data]
-wlroots = ["py.typed", "include/*.h"]
+wlroots = ["py.typed", "_ffi*.so", "include/*.h"]
 
 [tool.setuptools.dynamic]
 version = {attr = "wlroots.version.version"}

@@ -15,13 +15,16 @@ R = TypeVar("R")
 
 def _generate(fn: Callable[..., R]) -> Callable[..., R]:
     def _wrapped(*args: Any, **kwargs: Any) -> R:
+        repo_root = Path(__file__).resolve().parent
         # Run headers script to generate the protocol headers
         subprocess.run(
-            [sys.executable, "protocol_headers.py", "--generate"], check=True
+            [sys.executable, "protocol_headers.py", "--generate"],
+            check=True,
+            cwd=repo_root,
         )
         # Run the ffi_build.py script to generate the CFFI bindings
         subprocess.run(
-            [sys.executable, "wlroots/ffi_build.py"], check=True
+            [sys.executable, "wlroots/ffi_build.py"], check=True, cwd=repo_root
         )
         Distribution.has_ext_modules = lambda self: True
         return fn(*args, **kwargs)
