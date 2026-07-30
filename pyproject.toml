@@ -74,11 +74,11 @@ line-length = 88
 [tool.check-manifest]
 ignore = [
     "wlroots/_build.py",
-    "wlroots/include/*.h",
+    "wlroots/include/*",
 ]
 
 [tool.mypy]
-packages = ["wlroots", "tiny"]
+packages = ["wlroots", "tiny", "protocol_headers"]
 warn_unused_configs = true
 warn_redundant_casts = true
 warn_unused_ignores = true

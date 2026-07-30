@@ -20,15 +20,13 @@ dependencies, pywlroots requires the wlroots and xkbcommon libraries and
 headers to be installed.  At installation time, the cffi binding is compiled
 against these libraries.
 
-To build pywlroots from source, the Python requirements will need to be
-installed manually.  These are available in ``requirements.txt``.  The cffi
-bindings are built by running ``python wlroots/ffi_build.py``.
+To build pywlroots from source, generated Wayland and wlroots protocol headers
+and install with pip to compile the required cffi bindings.
 
-Included Protocols
-------------------
+.. code-block::
 
-XML files containing the protocol specification that are needed for the
-pywlroots ffi build. Read more `here <wlroots/include/README.rst>`_.
+    python protocol_headers.py --generate
+    pip install -e .
 
 Versioning and Releases
 -----------------------

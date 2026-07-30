@@ -7,8 +7,12 @@ import sys
 import tempfile
 from collections.abc import Sequence
 
-INCLUDE_PATH = pathlib.Path(__file__).parent
-WAYLAND_PROCOTOLS = [
+INCLUDE_PATH = pathlib.Path(__file__).parent / "wlroots" / "include"
+
+if not INCLUDE_PATH.exists():
+    INCLUDE_PATH.mkdir()
+
+WAYLAND_PROTOCOLS = [
     "stable/xdg-shell/xdg-shell.xml",
     "unstable/idle-inhibit/idle-inhibit-unstable-v1.xml",
     "unstable/pointer-constraints/pointer-constraints-unstable-v1.xml",
@@ -20,7 +24,7 @@ WLROOTS_PROTOCOLS = [
 
 
 def get_wlroots_protocols_dir() -> pathlib.Path:
-    return pathlib.Path(__file__).parent.parent
+    return pathlib.Path(__file__).parent / "wlroots"
 
 
 def get_wayland_protocols_dir() -> pathlib.Path | None:
@@ -39,10 +43,16 @@ def header_filename(xml_file: pathlib.Path) -> str:
     return f"{xml_file.stem}-protocol.h"
 
 
+def header_output_path(
+    input_xml: pathlib.Path, output_dir: pathlib.Path
+) -> pathlib.Path:
+    return output_dir / header_filename(input_xml)
+
+
 def generate_protocol_header(
     input_xml: pathlib.Path, output_dir: pathlib.Path
 ) -> pathlib.Path:
-    output_path = output_dir / header_filename(input_xml)
+    output_path = header_output_path(input_xml, output_dir)
     subprocess.check_output(
         ["wayland-scanner", "server-header", str(input_xml), str(output_path)]
     )
@@ -100,39 +110,56 @@ def generate(protocols: list[pathlib.Path]) -> None:
         generate_protocol_header(protocol_xml, INCLUDE_PATH)
 
 
-def parse_args(argv: Sequence[str] | None) -> tuple[list[pathlib.Path], bool]:
+def parse_args(
+    argv: Sequence[str] | None,
+) -> tuple[pathlib.Path | None, pathlib.Path | None, bool, bool]:
     parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "--wayland-dir", default=get_wayland_protocols_dir(), type=pathlib.Path
-    )
-    parser.add_argument(
-        "--wlroots-dir", default=get_wlroots_protocols_dir(), type=pathlib.Path
-    )
+    parser.add_argument("--wayland-dir", type=pathlib.Path)
+    parser.add_argument("--wlroots-dir", type=pathlib.Path)
     parser.add_argument("--generate", action="store_true")
+    parser.add_argument("--check", action="store_true")
     args = parser.parse_args(argv)
 
-    if args.wayland_dir is None or not args.wayland_dir.exists():
-        raise ValueError(
-            f"Wayland protocols directory does not exist: {args.wayland_dir}"
-        )
-    if not args.wlroots_dir.exists():
-        raise ValueError(f"Wlroots directory does not exist: {args.wlroots_dir}")
+    return args.wayland_dir, args.wlroots_dir, args.generate, args.check
 
-    protocols = [args.wayland_dir / protocol for protocol in WAYLAND_PROCOTOLS] + [
-        args.wlroots_dir / protocol for protocol in WLROOTS_PROTOCOLS
+
+def resolve_protocols(
+    wayland_dir: pathlib.Path | None = None,
+    wlroots_dir: pathlib.Path | None = None,
+) -> list[pathlib.Path]:
+    if wayland_dir is None:
+        wayland_dir = get_wayland_protocols_dir()
+    if wlroots_dir is None:
+        wlroots_dir = get_wlroots_protocols_dir()
+
+    if wayland_dir is None or not wayland_dir.exists():
+        raise ValueError(f"Wayland protocols directory does not exist: {wayland_dir}")
+    if not wlroots_dir.exists():
+        raise ValueError(f"Wlroots directory does not exist: {wlroots_dir}")
+
+    protocols = [wayland_dir / xml_file for xml_file in WAYLAND_PROTOCOLS] + [
+        wlroots_dir / xml_file for xml_file in WLROOTS_PROTOCOLS
     ]
 
     for protocol in protocols:
         if not protocol.exists():
             raise ValueError(f"Protocol does not exist: {protocol}")
 
-    return protocols, args.generate
+    return protocols
 
 
 if __name__ == "__main__":
-    protocols, generate_headers = parse_args(sys.argv[1:])
+    wayland_dir, wlroots_dir, do_generate, do_check = parse_args(sys.argv[1:])
+    protocols = resolve_protocols(wayland_dir, wlroots_dir)
 
-    if generate_headers:
+    if do_generate:
         generate(protocols)
-    else:
+    elif do_check:
         check(protocols)
+    else:
+        # Print the list of protocols that would be generated or checked
+        print("Protocols to be generated or checked:")
+        for protocol in protocols:
+            print(f"- {header_output_path(protocol, INCLUDE_PATH)}")
+        print("Use --generate to generate headers")
+        print("Use --check to check existing headers.")

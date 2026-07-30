@@ -10,5 +10,5 @@ repos:
     hooks:
       - id: mypy
         args: []
-        files: "^(wlroots|tiny)\/.*"
+        files: "^(wlroots|tiny)\/.*|^protocol_headers.py$"
         additional_dependencies: [pywayland]

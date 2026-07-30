@@ -3,7 +3,6 @@
 
 import importlib.util
 import os
-import subprocess
 import sys
 from pathlib import Path
 from typing import Any
@@ -13,7 +12,9 @@ from pywayland.ffi_build import ffi_builder as pywayland_ffi
 from xkbcommon.ffi_build import ffibuilder as xkb_ffi
 
 INCLUDE_PATH = (Path(__file__).parent / "include").resolve()
-assert INCLUDE_PATH.is_dir(), f"missing {INCLUDE_PATH}"
+assert INCLUDE_PATH.is_dir(), (
+    "Missing include directory. Run `python protocol_headers.py --generate` first."
+)
 
 
 def load_version() -> str:
@@ -3403,5 +3404,4 @@ ffi_builder.include(xkb_ffi)
 ffi_builder.cdef(CDEF)
 
 if __name__ == "__main__":
-    subprocess.run(["python", f"{INCLUDE_PATH}/check_headers.py", "--generate"])
     ffi_builder.compile()
