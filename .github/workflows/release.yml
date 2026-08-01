@@ -156,7 +156,7 @@ jobs:
       - name: Create artifact
         run: tar czf ~/wayland.tar.gz -C ${HOME}/wayland/ .
       - name: Upload built libraries
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: wayland
           path: ~/wayland.tar.gz
@@ -172,7 +172,7 @@ jobs:
         python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
     steps:
       - name: Download wayland libraries
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           name: wayland
       - name: Unpack wayland artifact
@@ -185,7 +185,7 @@ jobs:
         env:
           PYTHON_VERSION: ${{ matrix.python-version }}
       - name: Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: Install dependencies
         run: |
           yum -y install \
@@ -207,7 +207,7 @@ jobs:
           auditwheel show dist/pywlroots-*.whl
           auditwheel repair --plat manylinux_2_34_x86_64 -w output_wheels dist/pywlroots-*.whl
       - name: Upload wheel
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: wheels-${{ matrix.python-version }}
           path: output_wheels/*.whl
@@ -223,7 +223,7 @@ jobs:
         pypy-version: ["7.3"]
     steps:
       - name: Download wayland libraries
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           name: wayland
       - name: Unpack wayland artifact
@@ -239,7 +239,7 @@ jobs:
           PYTHON_VERSION: ${{ matrix.python-version }}
           PP_VERSION: ${{ matrix.pypy-version }}
       - name: Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: Install dependencies
         run: |
           yum -y install \
@@ -261,7 +261,7 @@ jobs:
           auditwheel show dist/pywlroots-*.whl
           auditwheel repair --plat manylinux_2_34_x86_64 -w output_wheels dist/pywlroots-*.whl
       - name: Upload wheel
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: wheels-pypy-${{ matrix.python-version }}
           path: output_wheels/*.whl
@@ -281,17 +281,17 @@ jobs:
           - "pypy-3.11"
     steps:
       - name: Download wayland libraries
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           name: wayland
       - name: Unpack wayland artifact
         run: sudo tar xf wayland.tar.gz -C /
       - name: Download wheels
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           name: wheels-${{ matrix.python-version }}
       - name: Setup Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: ${{ matrix.python-version }}
       - name: Install wheel
@@ -316,7 +316,7 @@ jobs:
       python-version: "3.14"
     steps:
       - name: Download wayland libraries
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           name: wayland
       - name: Unpack wayland artifact
@@ -329,7 +329,7 @@ jobs:
         env:
           PYTHON_VERSION: ${{ env.python-version }}
       - name: Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: Install dependencies
         run: |
           yum -y install \
@@ -348,7 +348,7 @@ jobs:
         run: |
           python -m build --sdist
       - name: Upload source
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: source
           path: dist/*.tar.gz
@@ -358,13 +358,13 @@ jobs:
     needs: [test-wheel, build-source]
     steps:
       - name: Download wheels
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           pattern: wheels-*
           path: dist/
           merge-multiple: true
       - name: Download source
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           name: source
           path: dist/
