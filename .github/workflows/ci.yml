@@ -47,12 +47,12 @@ jobs:
             libxfont-dev \
             libxkbcommon-dev \
             libxshmfence-dev \
-            meson \
             seatd \
             xfonts-utils \
             xserver-xorg-dev \
             xwayland \
             ninja-build
+          sudo pip install meson
       - name: Set environment variables
         run: |
           echo "CPATH=${HOME}/wayland/usr/include" >> $GITHUB_ENV

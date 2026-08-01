@@ -26,6 +26,7 @@ jobs:
           dnf -y install almalinux-release-devel
           yum -y install \
             hwdata \
+            python3-pip \
             libepoxy-devel \
             libffi-devel \
             libinput-devel \
@@ -48,7 +49,6 @@ jobs:
             xcb-util-wm-devel \
             xorg-x11-font-utils \
             xorg-x11-xtrans-devel \
-            meson \
             ninja-build \
             wget
       - name: Set environment variables
@@ -87,6 +87,9 @@ jobs:
           SEATD_URL: https://git.sr.ht/~kennylevinsen/seatd/archive/${{ env.seatd-version }}.tar.gz
           PIXMAN_URL: https://gitlab.freedesktop.org/pixman/pixman/-/archive/pixman-${{ env.pixman-version }}/pixman-pixman-${{ env.pixman-version }}.tar.bz2
           WLROOTS_URL: https://gitlab.freedesktop.org/wlroots/wlroots/-/archive/${{ env.wlroots-version }}/wlroots-${{ env.wlroots-version }}.tar.gz
+      - name: Install meson
+        run: |
+          pip install meson
       - name: Build wayland
         working-directory: wayland-${{ env.wayland-version }}
         run: |
