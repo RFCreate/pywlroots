@@ -74,6 +74,7 @@ def check(protocols: list[pathlib.Path]) -> None:
             f"Unexpected protocol files: {unexpected_files}, Extra files: {extra_files}"
         )
 
+    has_error = False
     for protocol_xml in protocols:
         protocol_header_file = INCLUDE_PATH / header_filename(protocol_xml)
         with protocol_header_file.open() as f:
@@ -87,11 +88,13 @@ def check(protocols: list[pathlib.Path]) -> None:
                 generated_header = f.readlines()
 
         if len(protocol_header) != len(generated_header):
-            raise ValueError(
-                f"Mismatch line count in {protocol_xml.name}, run: "
-                f"`wayland-scanner server-header /path/to/{protocol_xml.name} "
-                f"wlroots/include/{protocol_header_file.name}`"
+            print(
+                f"Mismatch line count in {protocol_xml.name}, run:\n"
+                f"> wayland-scanner server-header {protocol_xml} "
+                f"wlroots/include/{protocol_header_file.name}"
             )
+            has_error = True
+            continue
 
         for i, (generated_line, line) in enumerate(
             zip(generated_header, protocol_header)
@@ -100,9 +103,14 @@ def check(protocols: list[pathlib.Path]) -> None:
                 continue
 
             if generated_line != line:
-                print("Expected:", generated_line.strip("\n"))
-                print("Got:", line.strip("\n"))
-                raise ValueError(f"Mismatch in {protocol_xml.name} in line {i}")
+                print(f"Mismatch in {protocol_xml.name} in line {i}")
+                print("- New:", generated_line.strip("\n"))
+                print("- Old:", line.strip("\n"))
+                has_error = True
+                continue
+
+    if has_error:
+        raise ValueError("Protocol header check failed")
 
 
 def generate(protocols: list[pathlib.Path]) -> None:
