@@ -280,6 +280,11 @@ jobs:
           - "3.14"
           - "pypy-3.11"
     steps:
+      - name: Install dependencies
+        run: |
+          sudo apt update
+          sudo apt-get install -y --no-install-recommends \
+            libwayland-server0
       - name: Download wayland libraries
         uses: actions/download-artifact@v7
         with:
