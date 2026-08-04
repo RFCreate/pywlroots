@@ -21,15 +21,6 @@ class Matrix(Ptr):
         return Matrix(mat_ptr)
 
     @classmethod
-    def projection(
-        cls, width: int, height: int, transform: WlOutput.transform
-    ) -> Matrix:
-        """A 2d orthographic projection matrix of (width, height) with specified transform"""
-        mat_ptr = cls._build_matrix_ptr()
-        lib.wlr_matrix_projection(mat_ptr, width, height, transform)
-        return Matrix(mat_ptr)
-
-    @classmethod
     def project_box(
         cls,
         box: Box,
