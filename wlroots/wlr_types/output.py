@@ -13,8 +13,6 @@ from pywayland.utils import wl_list_for_each
 from wlroots import Ptr, PtrHasData, ffi, lib, ptr_or_null, str_or_none
 from wlroots.util.region import PixmanRegion32
 
-from .matrix import Matrix
-
 if TYPE_CHECKING:
     from collections.abc import Iterator
 
@@ -110,11 +108,6 @@ class Output(PtrHasData):
     @property
     def transform(self) -> WlOutput.transform:
         return WlOutput.transform(self._ptr.transform)
-
-    @property
-    def transform_matrix(self) -> Matrix:
-        """The transform matrix giving the projection of the output"""
-        return Matrix(self._ptr.transform_matrix)
 
     def enable(self, *, enable: bool = True) -> None:
         """Enables or disables the output

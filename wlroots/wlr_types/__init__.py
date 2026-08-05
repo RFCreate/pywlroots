@@ -18,7 +18,6 @@ from .gamma_control_v1 import GammaControlManagerV1  # noqa: F401
 from .input_device import InputDevice  # noqa: F401
 from .keyboard import Keyboard  # noqa: F401
 from .layer_shell_v1 import LayerShellV1  # noqa: F401
-from .matrix import Matrix  # noqa: F401
 from .output import Output, OutputState  # noqa: F401
 from .output_layout import OutputLayout, OutputLayoutOutput  # noqa: F401
 from .pointer import (  # noqa: F401
