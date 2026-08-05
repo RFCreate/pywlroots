@@ -108,7 +108,7 @@ CDEF = """
 typedef int32_t clockid_t;
 """
 
-# backend.h
+# wlr/backend.h
 CDEF += """
 struct wlr_backend_impl;
 
@@ -142,7 +142,7 @@ CDEF += """
 bool wlr_backend_is_multi(struct wlr_backend *backend);
 """
 
-# backend/session.h
+# wlr/backend/session.h
 CDEF += """
 bool wlr_session_change_vt(struct wlr_session *session, unsigned vt);
 """
@@ -207,7 +207,7 @@ struct wlr_texture *wlr_texture_from_buffer(struct wlr_renderer *renderer,
     struct wlr_buffer *buffer);
 """
 
-# types/wlr_box.h
+# wlr/util/box.h
 CDEF += """
 struct wlr_box {
     int x, y;
@@ -221,7 +221,7 @@ void wlr_box_closest_point(const struct wlr_box *box, double x, double y,
 bool wlr_box_contains_point(const struct wlr_box *box, double x, double y);
 """
 
-# types/wlr_buffer.h
+# wlr/types/wlr_buffer.h
 CDEF += """
 struct wlr_buffer {
     ...;
@@ -239,7 +239,7 @@ bool wlr_buffer_begin_data_ptr_access(struct wlr_buffer *buffer, uint32_t flags,
 void wlr_buffer_end_data_ptr_access(struct wlr_buffer *buffer);
 """
 
-# types/wlr_cursor.h
+# wlr/types/wlr_cursor.h
 CDEF += """
 struct wlr_cursor {
     struct wlr_cursor_state *state;
@@ -305,7 +305,7 @@ void wlr_cursor_set_xcursor(struct wlr_cursor *cur,
     struct wlr_xcursor_manager *manager, const char *name);
 """
 
-# types/wlr_compositor.h
+# wlr/types/wlr_compositor.h
 CDEF += """
 struct wlr_compositor {
     struct wl_global *global;
@@ -395,7 +395,7 @@ void wlr_surface_send_frame_done(struct wlr_surface *surface,
 extern "Python" void surface_iterator_callback(struct wlr_surface *surface, int sx, int sy, void *data);
 """
 
-# types/wlr_subcompositor.h
+# wlr/types/wlr_subcompositor.h
 CDEF += """
 struct wlr_subsurface_parent_state {
     int32_t x, y;
@@ -435,7 +435,7 @@ struct wlr_subcompositor {
 struct wlr_subcompositor *wlr_subcompositor_create(struct wl_display *display);
 """
 
-# types/wlr_damage_ring.h
+# wlr/types/wlr_damage_ring.h
 CDEF += """
 struct wlr_damage_ring {
     int32_t width, height;
@@ -444,7 +444,7 @@ struct wlr_damage_ring {
 };
 """
 
-# types/wlr_data_control_v1.h
+# wlr/types/wlr_data_control_v1.h
 CDEF += """
 struct wlr_data_control_manager_v1 {
     struct wl_global *global;
@@ -462,7 +462,7 @@ struct wlr_data_control_manager_v1 *wlr_data_control_manager_v1_create(
     struct wl_display *display);
 """
 
-# types/wlr_data_device.h
+# wlr/types/wlr_data_device.h
 CDEF += """
 struct wlr_data_device_manager *wlr_data_device_manager_create(
     struct wl_display *display);
@@ -539,7 +539,7 @@ struct wlr_data_source {
 void wlr_data_source_destroy(struct wlr_data_source *source);
 """
 
-# types/wlr_export_dmabuf_v1.h
+# wlr/types/wlr_export_dmabuf_v1.h
 CDEF += """
 struct wlr_export_dmabuf_manager_v1 {
     struct wl_global *global;
@@ -570,7 +570,7 @@ struct wlr_export_dmabuf_manager_v1 *wlr_export_dmabuf_manager_v1_create(
     struct wl_display *display);
 """
 
-# types/wlr_viewporter.h
+# wlr/types/wlr_viewporter.h
 CDEF += """
 struct wlr_viewporter {
     struct wl_global *global;
@@ -586,7 +586,7 @@ struct wlr_viewporter {
 struct wlr_viewporter *wlr_viewporter_create(struct wl_display *display);
 """
 
-# types/wlr_foreign_toplevel_management_v1.h
+# wlr/types/wlr_foreign_toplevel_management_v1.h
 CDEF += """
 struct wlr_foreign_toplevel_manager_v1 {
     struct wl_event_loop *event_loop;
@@ -680,7 +680,7 @@ void wlr_foreign_toplevel_handle_v1_set_parent(
     struct wlr_foreign_toplevel_handle_v1 *parent);
 """
 
-# types/wlr_fractional_scale_v1.h
+# wlr/types/wlr_fractional_scale_v1.h
 CDEF += """
 struct wlr_fractional_scale_manager_v1 {
 	struct wl_global *global;
@@ -700,7 +700,7 @@ struct wlr_fractional_scale_manager_v1 *wlr_fractional_scale_manager_v1_create(
 		struct wl_display *display, uint32_t version);
 """
 
-# types/wlr_gamma_control_v1.h
+# wlr/types/wlr_gamma_control_v1.h
 CDEF += """
 struct wlr_gamma_control_manager_v1 {
     struct wl_global *global;
@@ -720,7 +720,7 @@ struct wlr_gamma_control_manager_v1 *wlr_gamma_control_manager_v1_create(
     struct wl_display *display);
 """
 
-# types/wlr_input_inhibit_v1.h
+# wlr/types/wlr_idle_inhibit_v1.h
 CDEF += """
 struct wlr_idle_inhibit_manager_v1 {
     struct wl_list inhibitors; // wlr_idle_inhibit_inhibitor_v1::link
@@ -755,7 +755,7 @@ struct wlr_idle_inhibitor_v1 {
 struct wlr_idle_inhibit_manager_v1 *wlr_idle_inhibit_v1_create(struct wl_display *display);
 """
 
-# types/wlr_idle_notify_v1.h
+# wlr/types/wlr_idle_notify_v1.h
 CDEF += """
 struct wlr_idle_notifier_v1;
 
@@ -768,7 +768,7 @@ void wlr_idle_notifier_v1_notify_activity(struct wlr_idle_notifier_v1 *notifier,
     struct wlr_seat *seat);
 """
 
-# types/wlr_input_device.h
+# wlr/types/wlr_input_device.h
 CDEF += """
 enum wlr_button_state {
     WLR_BUTTON_RELEASED,
@@ -800,7 +800,7 @@ struct wlr_input_device {
 };
 """
 
-# types/wlr_keyboard.h
+# wlr/types/wlr_keyboard.h
 CDEF += """
 #define WLR_LED_COUNT 3
 #define WLR_MODIFIER_COUNT 8
@@ -916,7 +916,7 @@ struct pixman_box32* pixman_region32_rectangles(struct pixman_region32 *region,
 bool pixman_region32_not_empty(struct pixman_region32 *region);
 """
 
-# types/wlr_output.h
+# wlr/types/wlr_output.h
 CDEF += """
 struct wlr_output_mode {
     int32_t width, height;
@@ -1075,7 +1075,7 @@ enum wl_output_transform wlr_output_transform_compose(
     enum wl_output_transform tr_a, enum wl_output_transform tr_b);
 """
 
-# types/wlr_output_layout.h
+# wlr/types/wlr_output_layout.h
 CDEF += """
 struct wlr_output_layout {
     struct wl_list outputs;
@@ -1115,7 +1115,7 @@ struct wlr_output *wlr_output_layout_output_at(struct wlr_output_layout *layout,
     double lx, double ly);
 """
 
-# types/wlr_output_management_v1.h
+# wlr/types/wlr_output_management_v1.h
 CDEF += """
 struct wlr_output_manager_v1 {
     struct wl_display *display;
@@ -1196,7 +1196,7 @@ void wlr_output_head_v1_state_apply(
     struct wlr_output_state *output_state);
 """
 
-# types/wlr_output_powewr_management_v1.h
+# wlr/types/wlr_output_power_management_v1.h
 CDEF += """
 struct wlr_output_power_manager_v1 {
     struct wl_global *global;
@@ -1236,7 +1236,7 @@ struct wlr_output_power_manager_v1 *wlr_output_power_manager_v1_create(
     struct wl_display *display);
 """
 
-# types/wlr_pointer.h
+# wlr/types/wlr_pointer.h
 CDEF += """
 struct wlr_pointer {
     struct wlr_input_device base;
@@ -1373,7 +1373,7 @@ struct wlr_pointer *wlr_pointer_from_input_device(
     struct wlr_input_device *input_device);
 """
 
-# types/wlr_pointer_constraints_v1.h
+# wlr/types/wlr_pointer_constraints_v1.h
 CDEF += """
 enum wlr_pointer_constraint_v1_type {
     WLR_POINTER_CONSTRAINT_V1_LOCKED,
@@ -1445,7 +1445,7 @@ void wlr_pointer_constraint_v1_send_deactivated(
     struct wlr_pointer_constraint_v1 *constraint);
 """
 
-# types/wlr_pointer_gestures_v1.h
+# wlr/types/wlr_pointer_gestures_v1.h
 CDEF += """
 struct wlr_pointer_gestures_v1 {
     struct wl_global *global;
@@ -1514,7 +1514,7 @@ void wlr_pointer_gestures_v1_send_hold_end(
     bool cancelled);
 """
 
-# types/wlr_primary_selection_v1.h
+# wlr/types/wlr_primary_selection_v1.h
 CDEF += """
 struct wlr_primary_selection_v1_device_manager {
     struct wl_global *global;
@@ -1533,7 +1533,7 @@ struct wlr_primary_selection_v1_device_manager *
     wlr_primary_selection_v1_device_manager_create(struct wl_display *display);
 """
 
-# types/wlr_presentation_time.h
+# wlr/types/wlr_presentation_time.h
 CDEF += """
 struct wlr_presentation {
     ...;
@@ -1542,13 +1542,13 @@ struct wlr_presentation *wlr_presentation_create(struct wl_display *display,
     struct wlr_backend *backend);
 """
 
-# types/wlr_primary_selection.h
+# wlr/types/wlr_primary_selection.h
 CDEF += """
 void wlr_seat_set_primary_selection(struct wlr_seat *seat,
     struct wlr_primary_selection_source *source, uint32_t serial);
 """
 
-# types/wlr_relative_pointer_v1.h
+# wlr/types/wlr_relative_pointer_v1.h
 CDEF += """
 struct wlr_relative_pointer_manager_v1 {
     struct wl_global *global;
@@ -1582,7 +1582,7 @@ void wlr_relative_pointer_manager_v1_send_relative_motion(
     double dx_unaccel, double dy_unaccel);
 """
 
-# types/wlr_scene.h
+# wlr/types/wlr_scene.h
 CDEF += """
 typedef bool (*wlr_scene_buffer_point_accepts_input_func_t)(
     struct wlr_scene_buffer *buffer, double *sx, double *sy);
@@ -1780,7 +1780,7 @@ struct wlr_scene_tree *wlr_scene_drag_icon_create(
     struct wlr_scene_tree *parent, struct wlr_drag_icon *drag_icon);
 """
 
-# types/wlr_screencopy_v1.h
+# wlr/types/wlr_screencopy_v1.h
 CDEF += """
 struct wlr_screencopy_manager_v1 {
     struct wl_global *global;
@@ -1800,7 +1800,7 @@ struct wlr_screencopy_manager_v1 *wlr_screencopy_manager_v1_create(
     struct wl_display *display);
 """
 
-# types/wlr_seat.h
+# wlr/types/wlr_seat.h
 CDEF += """
 struct timespec {
     int64_t tv_sec;
@@ -2064,7 +2064,7 @@ bool wlr_seat_validate_pointer_grab_serial(struct wlr_seat *seat,
 bool wlr_surface_accepts_touch(struct wlr_seat *wlr_seat, struct wlr_surface *surface);
 """
 
-# types/wlr_server_decoration.h
+# wlr/types/wlr_server_decoration.h
 CDEF += """
 enum wlr_server_decoration_manager_mode {
     WLR_SERVER_DECORATION_MANAGER_MODE_NONE = 0,
@@ -2090,13 +2090,13 @@ void wlr_server_decoration_manager_set_default_mode(
     struct wlr_server_decoration_manager *manager, uint32_t default_mode);
 """
 
-# types/wlr_single_pixel_buffer_v1.h
+# wlr/types/wlr_single_pixel_buffer_v1.h
 CDEF += """
 struct wlr_single_pixel_buffer_manager_v1 *wlr_single_pixel_buffer_manager_v1_create(
     struct wl_display *display);
 """
 
-# types/wlr_session_lock_v1.h
+# wlr/types/wlr_session_lock_v1.h
 CDEF += """
 struct wlr_session_lock_manager_v1 {
     struct wl_global *global;
@@ -2173,7 +2173,7 @@ struct wlr_session_lock_surface_v1 *wlr_session_lock_surface_v1_try_from_wlr_sur
 """
 
 
-# types/wlr_switch.h
+# wlr/types/wlr_switch.h
 CDEF += """
 struct wlr_switch {
     struct wlr_input_device base;
@@ -2202,7 +2202,7 @@ struct wlr_switch *wlr_switch_from_input_device(
 """
 
 
-# types/wlr_touch.h
+# wlr/types/wlr_touch.h
 CDEF += """
 struct wlr_touch {
     struct wlr_input_device base;
@@ -2258,7 +2258,7 @@ struct wlr_touch *wlr_touch_from_input_device(
     struct wlr_input_device *input_device);
 """
 
-# types/wlr_virtual_keyboard_v1.h
+# wlr/types/wlr_virtual_keyboard_v1.h
 CDEF += """
 struct wlr_virtual_keyboard_manager_v1 {
     struct wl_global *global;
@@ -2287,7 +2287,7 @@ struct wlr_virtual_keyboard_manager_v1* wlr_virtual_keyboard_manager_v1_create(
     struct wl_display *display);
 """
 
-# types/wlr_virtual_pointer_v1.h
+# wlr/types/wlr_virtual_pointer_v1.h
 CDEF += """
 struct wlr_virtual_pointer_manager_v1 {
     struct wl_global *global;
@@ -2321,7 +2321,7 @@ struct wlr_virtual_pointer_manager_v1* wlr_virtual_pointer_manager_v1_create(
     struct wl_display *display);
 """
 
-# types/wlr_xcursor_manager.h
+# wlr/types/wlr_xcursor_manager.h
 CDEF += """
 struct wlr_xcursor_manager *wlr_xcursor_manager_create(const char *name,
     uint32_t size);
@@ -2333,7 +2333,7 @@ struct wlr_xcursor *wlr_xcursor_manager_get_xcursor(
     struct wlr_xcursor_manager *manager, const char *name, float scale);
 """
 
-# xcursor.h
+# wlr/xcursor.h
 CDEF += """
 struct wlr_xcursor_image {
     uint32_t width;
@@ -2351,7 +2351,7 @@ struct wlr_xcursor {
 };
 """
 
-# types/wlr_xdg_activation_v1.h
+# wlr/types/wlr_xdg_activation_v1.h
 CDEF += """
 struct wlr_xdg_activation_v1 {
     uint32_t token_timeout_msec;
@@ -2375,7 +2375,7 @@ struct wlr_xdg_activation_v1 *wlr_xdg_activation_v1_create(
     struct wl_display *display);
 """
 
-# types/wlr_xdg_decoration_v1.h
+# wlr/types/wlr_xdg_decoration_v1.h
 CDEF += """
 enum wlr_xdg_toplevel_decoration_v1_mode {
     WLR_XDG_TOPLEVEL_DECORATION_V1_MODE_NONE = 0,
@@ -2447,7 +2447,7 @@ uint32_t wlr_xdg_toplevel_decoration_v1_set_mode(
     enum wlr_xdg_toplevel_decoration_v1_mode mode);
 """
 
-# types/wlr_xdg_output_v1.h
+# wlr/types/wlr_xdg_output_v1.h
 CDEF += """
 struct wlr_xdg_output_manager_v1 {
     struct wl_global *global;
@@ -2470,7 +2470,7 @@ struct wlr_xdg_output_manager_v1 *wlr_xdg_output_manager_v1_create(
     struct wl_display *display, struct wlr_output_layout *layout);
 """
 
-# util/addon.h
+# wlr/util/addon.h
 CDEF += """
 struct wlr_addon_set {
     struct wl_list addons;
@@ -2482,7 +2482,7 @@ struct wlr_addon {
 };
 """
 
-# types/wlr_xdg_shell.h
+# wlr/types/wlr_xdg_shell.h
 CDEF += """
 struct wlr_xdg_shell {
     struct wl_global *global;
@@ -2760,7 +2760,7 @@ void wlr_xdg_surface_for_each_surface(struct wlr_xdg_surface *surface,
 uint32_t wlr_xdg_surface_schedule_configure(struct wlr_xdg_surface *surface);
 """
 
-# util/edges.h
+# wlr/util/edges.h
 CDEF += """
 enum wlr_edges {
     WLR_EDGE_NONE = ...,
@@ -2772,7 +2772,7 @@ enum wlr_edges {
 };
 """
 
-# util/log.h
+# wlr/util/log.h
 CDEF += """
 enum wlr_log_importance {
     WLR_SILENT,
@@ -2789,13 +2789,13 @@ typedef void (*wrapped_log_func_t)(enum wlr_log_importance importance, const cha
 void wrapped_log_init(enum wlr_log_importance verbosity, wrapped_log_func_t callback);
 """
 
-# util/region.h
+# wlr/util/region.h
 CDEF += """
 void wlr_region_transform(struct pixman_region32 *dst, struct pixman_region32 *src,
     enum wl_output_transform transform, int width, int height);
 """
 
-# backend/headless.h
+# wlr/backend/headless.h
 CDEF += """
 struct wlr_backend *wlr_headless_backend_create(struct wl_display *display);
 
@@ -2803,7 +2803,7 @@ bool wlr_backend_is_headless(struct wlr_backend *backend);
 bool wlr_output_is_headless(struct wlr_output *output);
 """
 
-# version.h
+# wlr/version.h
 CDEF_VERSION = """
 #define WLR_VERSION_MAJOR ...
 #define WLR_VERSION_MINOR ...
@@ -2902,7 +2902,7 @@ void wrapped_log_init(enum wlr_log_importance verbosity, wrapped_log_func_t call
 }
 """
 
-# types//wlr_layer_shell_v1.h
+# wlr/types//wlr_layer_shell_v1.h
 CDEF += """
 struct wlr_layer_shell_v1 {
     struct wl_global *global;
@@ -2972,7 +2972,7 @@ struct wlr_surface *wlr_layer_surface_v1_surface_at(
 check_version()
 
 if has_xwayland():
-    # xwayland.h
+    # wlr/xwayland.h
     print("Built with support for XWayland helpers.")
 
     SOURCE += """
