@@ -9,14 +9,14 @@ from typing import Any
 from wlroots import ffi, lib
 
 
-def _int_getter(attr: str) -> Callable[..., int]:
+def _int_getter(attr: str) -> Callable[[Any], int]:
     def getter(self: Any) -> int:
         return getattr(self._ptr, attr)
 
     return getter
 
 
-def _int_setter(attr: str) -> Callable[..., None]:
+def _int_setter(attr: str) -> Callable[[Any, int], None]:
     def setter(self: Any, value: int) -> None:
         setattr(self._ptr, attr, value)
 

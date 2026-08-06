@@ -5,16 +5,17 @@ import sys
 from collections.abc import Callable
 from functools import wraps
 from pathlib import Path
-from typing import Any, TypeVar
+from typing import Any, ParamSpec, TypeVar
 
 from setuptools import build_meta as _orig
 from setuptools.build_meta import *  # noqa: F403
 from setuptools.dist import Distribution
 
+P = ParamSpec("P")
 R = TypeVar("R")
 
 
-def run_protocol_headers(fn: Callable[..., R]) -> Callable[..., R]:
+def run_protocol_headers(fn: Callable[P, R]) -> Callable[P, R]:
     @wraps(fn)
     def wrapper(*args: Any, **kwargs: Any) -> R:
         repo_root = Path(__file__).resolve().parent
@@ -29,7 +30,7 @@ def run_protocol_headers(fn: Callable[..., R]) -> Callable[..., R]:
     return wrapper
 
 
-def run_ffi_build(fn: Callable[..., R]) -> Callable[..., R]:
+def run_ffi_build(fn: Callable[P, R]) -> Callable[P, R]:
     @wraps(fn)
     def wrapper(*args: Any, **kwargs: Any) -> R:
         repo_root = Path(__file__).resolve().parent
