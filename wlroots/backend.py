@@ -37,12 +37,13 @@ class Backend(Ptr):
         """
         self.session: Session | None = None
 
+        event_loop_ptr = display.get_event_loop()._ptr
         if backend_type == BackendType.AUTO:
             session_ptr = ffi.new("struct wlr_session **")
-            ptr = lib.wlr_backend_autocreate(display._ptr, session_ptr)
+            ptr = lib.wlr_backend_autocreate(event_loop_ptr, session_ptr)
             self.session = Session(session_ptr[0])
         elif backend_type == BackendType.HEADLESS:
-            ptr = lib.wlr_headless_backend_create(display._ptr)
+            ptr = lib.wlr_headless_backend_create(event_loop_ptr)
         else:
             raise ValueError(f"Unknown backend type: {backend_type}")
 
