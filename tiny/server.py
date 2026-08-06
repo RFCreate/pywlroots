@@ -145,9 +145,10 @@ class TinywlServer:
 
         backend.new_input_event.add(Listener(self.server_new_input))
 
-    def _terminate_signal_callback(self, sig_num: int, display: Display) -> None:
+    def _terminate_signal_callback(self, sig_num: int, display: Display) -> int:
         logging.info("Terminating event loop.")
         display.terminate()
+        return 0
 
     def view_at(
         self, layout_x: float, layout_y: float

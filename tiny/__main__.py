@@ -55,7 +55,7 @@ def main(argv: Sequence[str] | None) -> None:
             )
 
             socket = display.add_socket()
-            print("socket:", socket.decode())
+            print("socket:", socket)
             with backend:
                 display.run()
 
