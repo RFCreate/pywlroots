@@ -158,21 +158,6 @@ struct wlr_buffer *wlr_allocator_create_buffer(struct wlr_allocator *alloc,
 # wlr/render/wlr_renderer.h
 CDEF += """
 struct wlr_renderer *wlr_renderer_autocreate(struct wlr_backend *backend);
-
-bool wlr_renderer_begin(struct wlr_renderer *r, int width, int height);
-void wlr_renderer_end(struct wlr_renderer *r);
-void wlr_renderer_clear(struct wlr_renderer *r, const float color[static 4]);
-
-void wlr_renderer_scissor(struct wlr_renderer *r, struct wlr_box *box);
-
-bool wlr_render_texture(struct wlr_renderer *r, struct wlr_texture *texture,
-    const float projection[static 9], int x, int y, float alpha);
-bool wlr_render_texture_with_matrix(struct wlr_renderer *r,
-    struct wlr_texture *texture, const float matrix[static 9], float alpha);
-
-void wlr_render_rect(struct wlr_renderer *r, const struct wlr_box *box,
-    const float color[static 4], const float projection[static 9]);
-
 bool wlr_renderer_init_wl_display(struct wlr_renderer *r, struct wl_display *wl_display);
 """
 
