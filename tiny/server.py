@@ -259,7 +259,7 @@ class TinywlServer:
         ):
             # translate libinput keycode -> xkbcommon
             keycode = key_event.keycode + 8
-            keysyms = get_keysyms(keyboard._ptr.xkb_state, keycode)
+            keysyms = get_keysyms(keyboard.xkb_state, keycode)
 
             for keysym in keysyms:
                 if self.handle_keybinding(keysym):
@@ -496,10 +496,10 @@ class TinywlServer:
     ) -> None:
         # This event is rasied by the seat when a client provides a cursor image
         # TODO: check that seat client is correct
-        self._cursor.set_surface(event.surface, event.hotspot)
+        self._cursor.set_surface(event.surface, (event.hotspot_x, event.hotspot_y))
 
     def seat_request_set_selection(
         self, listener: Listener, event: RequestSetSelectionEvent
     ) -> None:
         print("request set selection")
-        self._seat.set_selection(event._ptr.source, event.serial)
+        self._seat.set_selection(event.source._ptr, event.serial)

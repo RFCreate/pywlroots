@@ -2,12 +2,12 @@
 
 from pywayland.server import Display
 
-from wlroots import PtrHasData, lib
+from wlroots import Ptr, lib
 
 from .compositor import Surface
 
 
-class FractionalScaleManagerV1(PtrHasData):
+class FractionalScaleManagerV1(Ptr):
     def __init__(self, display: Display, version: int = 1) -> None:
         """Create a wlr_fractional_scale_manager_v1"""
         self._ptr = lib.wlr_fractional_scale_manager_v1_create(display._ptr, version)

@@ -76,6 +76,9 @@ class XdgSurface(PtrHasData):
         self._ptr = ffi.cast("struct wlr_xdg_surface *", ptr)
 
         self.destroy_event = Signal(ptr=ffi.addressof(self._ptr.events.destroy))
+        self.ping_timeout_event = Signal(
+            ptr=ffi.addressof(self._ptr.events.ping_timeout)
+        )
         self.new_popup_event = Signal(
             ptr=ffi.addressof(self._ptr.events.new_popup), data_wrapper=XdgPopup
         )
@@ -226,7 +229,6 @@ class XdgSurfaceConfigure(Ptr):
 
     @property
     def surface(self) -> XdgSurface:
-        # TODO: keep weakref
         return XdgSurface(self._ptr.surface)
 
     @property
@@ -303,10 +305,7 @@ class XdgToplevelMoveEvent(Ptr):
 
     @property
     def toplevel(self) -> XdgToplevel:
-        # TODO: keep weakref
         return XdgToplevel(self._ptr.toplevel)
-
-    # TODO: seat client
 
     @property
     def serial(self) -> int:
@@ -319,10 +318,7 @@ class XdgToplevelResizeEvent(Ptr):
 
     @property
     def toplevel(self) -> XdgToplevel:
-        # TODO: keep weakref
         return XdgToplevel(self._ptr.toplevel)
-
-    # TODO: seat client
 
     @property
     def serial(self) -> int:
@@ -339,10 +335,7 @@ class XdgToplevelShowWindowMenuEvent(Ptr):
 
     @property
     def toplevel(self) -> XdgToplevel:
-        # TODO: keep weakref
         return XdgToplevel(self._ptr.toplevel)
-
-    # TODO: seat client
 
     @property
     def serial(self) -> int:

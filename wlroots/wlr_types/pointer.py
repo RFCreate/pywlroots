@@ -174,18 +174,6 @@ class PointerPinchBeginEvent(_PointerEvent):
     def fingers(self) -> int:
         return self._ptr.fingers
 
-    @property
-    def time_msec(self) -> int:
-        return self._ptr.time_msec
-
-    @property
-    def dx(self) -> float:
-        return self._ptr.dx
-
-    @property
-    def dy(self) -> float:
-        return self._ptr.dy
-
 
 class PointerPinchUpdateEvent(_PointerEvent):
     def __init__(self, ptr: ffi.CData) -> None:
@@ -210,14 +198,6 @@ class PointerPinchUpdateEvent(_PointerEvent):
     @property
     def rotation(self) -> float:
         return self._ptr.rotation
-
-    @property
-    def time_msec(self) -> int:
-        return self._ptr.time_msec
-
-    @property
-    def cancelled(self) -> bool:
-        return self._ptr.cancelled
 
 
 class PointerPinchEndEvent(_PointerEvent):

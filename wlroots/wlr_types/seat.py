@@ -13,7 +13,7 @@ from pywayland.utils import wl_list_for_each
 from wlroots import Ptr, PtrHasData, ffi, instance_or_none, lib, ptr_or_null
 
 from .compositor import Surface
-from .data_device_manager import Drag
+from .data_device_manager import DataSource, Drag
 from .input_device import ButtonState
 from .keyboard import Keyboard, KeyboardKeyEvent, KeyboardModifiers
 from .pointer import AxisOrientation, AxisSource
@@ -108,6 +108,7 @@ class Seat(PtrHasData):
             ptr=ffi.addressof(self._ptr.events.start_drag),
             data_wrapper=Drag,
         )
+        self.destroy_event = Signal(ptr=ffi.addressof(self._ptr.events.destroy))
 
     @property
     def pointer_state(self) -> SeatPointerState:
@@ -433,7 +434,6 @@ class Seat(PtrHasData):
         if source is None:
             lib.wlr_seat_set_selection(self._ptr, ffi.NULL, serial)
         else:
-            # TODO: wrap source in a data source
             lib.wlr_seat_set_selection(self._ptr, source, serial)
 
     def set_primary_selection(self, source: ffi.CData | None, serial: int) -> None:
@@ -446,7 +446,6 @@ class Seat(PtrHasData):
         if source is None:
             lib.wlr_seat_set_primary_selection(self._ptr, ffi.NULL, serial)
         else:
-            # TODO: wrap source in a data source
             lib.wlr_seat_set_primary_selection(self._ptr, source, serial)
 
     def validate_pointer_grab_serial(self, origin: Surface, serial: int) -> bool:
@@ -481,11 +480,8 @@ class PointerRequestSetCursorEvent(Ptr):
     def __init__(self, ptr: ffi.CData) -> None:
         self._ptr = ffi.cast("struct wlr_seat_pointer_request_set_cursor_event *", ptr)
 
-    # TODO: seat client
-
     @property
     def surface(self) -> Surface:
-        # TODO: setup weakref
         return Surface(self._ptr.surface)
 
     @property
@@ -493,15 +489,21 @@ class PointerRequestSetCursorEvent(Ptr):
         return self._ptr.serial
 
     @property
-    def hotspot(self) -> tuple[int, int]:
-        return self._ptr.hotspot_x, self._ptr.hotspot_y
+    def hotspot_x(self) -> int:
+        return self._ptr.hotspot_x
+
+    @property
+    def hotspot_y(self) -> int:
+        return self._ptr.hotspot_y
 
 
 class RequestSetSelectionEvent(Ptr):
     def __init__(self, ptr: ffi.CData) -> None:
         self._ptr = ffi.cast("struct wlr_seat_request_set_selection_event *", ptr)
 
-    # TODO: source
+    @property
+    def source(self) -> DataSource:
+        return DataSource(self._ptr.source)
 
     @property
     def serial(self) -> int:
@@ -513,8 +515,6 @@ class RequestSetPrimarySelectionEvent(Ptr):
         self._ptr = ffi.cast(
             "struct wlr_seat_request_set_primary_selection_event *", ptr
         )
-
-    # TODO: source
 
     @property
     def serial(self) -> int:
@@ -543,7 +543,10 @@ class _FocusChangeEvent(Ptr):
     Base class for ...FocusChangeEvents which provides common properties.
     """
 
-    # TODO: wlr_seat *seat
+    @property
+    def seat(self) -> Seat:
+        name = ffi.string(self._ptr.seat.name).decode()
+        return Seat(self._ptr.seat, name)
 
     @property
     def old_surface(self) -> Surface:
@@ -560,11 +563,11 @@ class PointerFocusChangeEvent(_FocusChangeEvent):
         self._ptr = ffi.cast("struct wlr_seat_pointer_focus_change_event *", ptr)
 
     @property
-    def surface_x(self) -> float:
+    def sx(self) -> float:
         return self._ptr.sx
 
     @property
-    def surface_y(self) -> float:
+    def sy(self) -> float:
         return self._ptr.sy
 
 
@@ -584,11 +587,11 @@ class SeatPointerState(Ptr):
         )
 
     @property
-    def surface_x(self) -> float:
+    def sx(self) -> float:
         return self._ptr.sx
 
     @property
-    def surface_y(self) -> float:
+    def sy(self) -> float:
         return self._ptr.sy
 
     @property
@@ -622,6 +625,7 @@ class SeatTouchState(Ptr):
     def grab_serial(self) -> int:
         return self._ptr.grab_serial
 
+    @property
     def grab_id(self) -> int:
         return self._ptr.grab_id
 
@@ -639,28 +643,3 @@ class SeatTouchState(Ptr):
 class TouchPoint(Ptr):
     def __init__(self, ptr: ffi.CData) -> None:
         self._ptr = ptr
-
-    @property
-    def touch_id(self) -> int:
-        return self._ptr.touch_id
-
-    @property
-    def surface_x(self) -> float:
-        return self._ptr.sx
-
-    @property
-    def surface_y(self) -> float:
-        return self._ptr.sy
-
-    @property
-    def surface(self) -> Surface | None:
-        return instance_or_none(Surface, self._ptr.surface)
-
-    @property
-    def focused_surface(self) -> Surface | None:
-        """The surface that is currently focused
-
-        Note: wlroot calls it "focus_surface" renamed it to "focused_surface"
-        to keep the name aligned to "SeatKeyboardState" and "SeatPointerState".
-        """
-        return instance_or_none(Surface, self._ptr.focus_surface)

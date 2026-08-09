@@ -27,6 +27,7 @@ class XdgActivationV1(Ptr):
             ptr=ffi.addressof(self._ptr.events.request_activate),
             data_wrapper=XdgActivationV1RequestActivateEvent,
         )
+        self.new_token_event = Signal(ptr=ffi.addressof(self._ptr.events.new_token))
 
     @classmethod
     def create(cls, display: Display) -> XdgActivationV1:

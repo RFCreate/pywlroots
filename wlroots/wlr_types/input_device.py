@@ -45,14 +45,6 @@ class InputDevice(PtrHasData):
         return InputDeviceType(self._ptr.type)
 
     @property
-    def vendor(self) -> int:
-        return self._ptr.vendor
-
-    @property
-    def product(self) -> int:
-        return self._ptr.product
-
-    @property
     def name(self) -> str:
         return ffi.string(self._ptr.name).decode()
 

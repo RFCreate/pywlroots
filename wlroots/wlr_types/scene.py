@@ -125,14 +125,14 @@ class SceneOutput(Ptr):
         lib.wlr_scene_output_set_position(self._ptr, lx, ly)
 
 
-class SceneTree(PtrHasData):
+class SceneTree(Ptr):
     def __init__(self, ptr: ffi.CData) -> None:
         """struct wlr_scene_tree"""
         self._ptr = ptr
 
     @property
     def node(self) -> SceneNode:
-        """struct wlr_scene_tree"""
+        """struct wlr_scene_node"""
         ptr = ffi.addressof(self._ptr.node)
         return SceneNode(ptr)
 
@@ -343,7 +343,7 @@ class SceneRect(Ptr):
 
     @property
     def node(self) -> SceneNode:
-        """struct wlr_scene_tree"""
+        """struct wlr_scene_node"""
         ptr = ffi.addressof(self._ptr.node)
         return SceneNode(ptr)
 

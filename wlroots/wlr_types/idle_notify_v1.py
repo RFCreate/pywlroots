@@ -11,10 +11,6 @@ class IdleNotifierV1(Ptr):
     def __init__(self, display: Display) -> None:
         self._ptr = lib.wlr_idle_notifier_v1_create(display._ptr)
 
-    @property
-    def inhibited(self) -> bool:
-        return bool(self._ptr.inhibited)
-
     def set_inhibited(self, inhibited: bool) -> None:
         """
         Inhibit idle.

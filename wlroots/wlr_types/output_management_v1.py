@@ -179,6 +179,7 @@ class OutputManagerV1(PtrHasData):
         self.test_event = Signal(
             ptr=ffi.addressof(self._ptr.events.test), data_wrapper=OutputConfigurationV1
         )
+        self.destroy_event = Signal(ptr=ffi.addressof(self._ptr.events.destroy))
 
     def set_configuration(self, config: OutputConfigurationV1) -> None:
         """

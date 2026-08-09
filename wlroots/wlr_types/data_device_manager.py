@@ -102,10 +102,6 @@ class DragIcon(PtrHasData):
         _weakkeydict[surface_ptr] = self._ptr
         return Surface(surface_ptr)
 
-    @property
-    def mapped(self) -> bool:
-        return self._ptr.mapped
-
 
 class DataSource(Ptr):
     def __init__(self, ptr: ffi.CData) -> None:

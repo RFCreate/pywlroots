@@ -69,8 +69,12 @@ class XCursor(Ptr):
         self._ptr = ptr
 
     @property
+    def image_count(self) -> int:
+        return self._ptr.image_count
+
+    @property
     def images(self) -> Iterator[XCursorImage]:
-        for i in range(self._ptr.image_count):
+        for i in range(self.image_count):
             yield XCursorImage(self._ptr.images[0][i])
 
 

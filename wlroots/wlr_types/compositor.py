@@ -59,6 +59,9 @@ class Surface(PtrHasData):
         """
         self._ptr = ptr
 
+        self.client_commit_event = Signal(
+            ptr=ffi.addressof(self._ptr.events.client_commit)
+        )
         self.precommit_event = Signal(
             ptr=ffi.addressof(self._ptr.events.precommit),
             data_wrapper=SurfaceState,
@@ -80,11 +83,11 @@ class Surface(PtrHasData):
         return SurfaceState(current_ptr)
 
     @property
-    def previous(self) -> SurfaceState:
-        """The state of the previous commit"""
-        previous_ptr = self._ptr.previous
-        _weakkeydict[previous_ptr] = self._ptr
-        return SurfaceState(previous_ptr)
+    def pending(self) -> SurfaceState:
+        """The pending commited surface state"""
+        pending_ptr = self._ptr.pending
+        _weakkeydict[pending_ptr] = self._ptr
+        return SurfaceState(pending_ptr)
 
     def get_texture(self) -> Texture | None:
         """Get the texture of the buffer currently attached to this surface

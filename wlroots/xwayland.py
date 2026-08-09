@@ -196,6 +196,9 @@ class Surface(PtrHasData):
         self.set_decorations_event = Signal(
             ptr=ffi.addressof(self._ptr.events.set_decorations)
         )
+        self.set_strut_partial_event = Signal(
+            ptr=ffi.addressof(self._ptr.events.set_strut_partial)
+        )
         self.set_override_redirect_event = Signal(
             ptr=ffi.addressof(self._ptr.events.set_override_redirect)
         )
@@ -305,16 +308,24 @@ class Surface(PtrHasData):
         return Surface(ptr)
 
     @property
+    def window_type_len(self) -> int:
+        return self._ptr.window_type_len
+
+    @property
     def window_type(self) -> list[int]:
         """This is an array of xcb_atom_t."""
-        if self._ptr.window_type_len == 0:
+        if self.window_type_len == 0:
             return []
-        return ffi.unpack(self._ptr.window_type, self._ptr.window_type_len)
+        return ffi.unpack(self._ptr.window_type, self.window_type_len)
 
     @property
     def protocols(self) -> list[int]:
         """This is an array of xcb_atom_t."""
-        return ffi.unpack(self._ptr.protocols, self._ptr.protocols_len)
+        return ffi.unpack(self._ptr.protocols, self.protocols_len)
+
+    @property
+    def protocols_len(self) -> int:
+        return self._ptr.protocols_len
 
     @property
     def hints(self) -> Hints | None:

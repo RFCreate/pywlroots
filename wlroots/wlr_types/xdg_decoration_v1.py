@@ -64,22 +64,6 @@ class XdgToplevelDecorationV1(PtrHasData):
         _weakkeydict[manager_ptr] = self._ptr
         return XdgDecorationManagerV1(manager_ptr)
 
-    @property
-    def added(self) -> bool:
-        return self._ptr.added
-
-    @property
-    def current_mode(self) -> XdgToplevelDecorationV1Mode:
-        return XdgToplevelDecorationV1Mode(self._ptr.current_mode)
-
-    @property
-    def client_pending_mode(self) -> XdgToplevelDecorationV1Mode:
-        return XdgToplevelDecorationV1Mode(self._ptr.client_pending_mode)
-
-    @property
-    def server_pending_mode(self) -> XdgToplevelDecorationV1Mode:
-        return XdgToplevelDecorationV1Mode(self._ptr.server_pending_mode)
-
     def set_mode(self, mode: XdgToplevelDecorationV1Mode) -> int:
         if mode == XdgToplevelDecorationV1Mode.NONE:
             raise ValueError("Toplevel decoration mode cannot be set to NONE.")

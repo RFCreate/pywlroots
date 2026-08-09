@@ -11,3 +11,4 @@ class GammaControlManagerV1(PtrHasData):
         self._ptr = lib.wlr_gamma_control_manager_v1_create(display._ptr)
 
         self.destroy_event = Signal(ptr=ffi.addressof(self._ptr.events.destroy))
+        self.set_gammma_event = Signal(ptr=ffi.addressof(self._ptr.events.set_gamma))

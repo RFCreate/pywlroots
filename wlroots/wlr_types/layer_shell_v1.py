@@ -119,18 +119,6 @@ class LayerSurfaceV1(PtrHasData):
         self._ptr.output = output._ptr
 
     @property
-    def added(self) -> bool:
-        return self._ptr.added
-
-    @property
-    def configured(self) -> bool:
-        return self._ptr.configured
-
-    @property
-    def mapped(self) -> bool:
-        return self._ptr.mapped
-
-    @property
     def pending(self) -> LayerSurfaceV1State:
         state_ptr = self._ptr.pending
         _weakkeydict[state_ptr] = self._ptr

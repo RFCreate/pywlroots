@@ -77,9 +77,14 @@ class Output(PtrHasData):
         return str_or_none(self._ptr.serial)
 
     @property
-    def physical_size_mm(self) -> tuple[int, int]:
-        """Returns the width and height of the output, in millimeters"""
-        return self._ptr.phys_width, self._ptr.phys_height
+    def phys_width(self) -> int:
+        """Returns the physical width of the output, in millimeters"""
+        return self._ptr.phys_width
+
+    @property
+    def phys_height(self) -> int:
+        """Returns the physical height of the output, in millimeters"""
+        return self._ptr.phys_height
 
     @property
     def modes(self) -> Iterator[OutputMode]:
@@ -319,7 +324,7 @@ class OutputMode(Ptr):
         return self._ptr.height
 
     @property
-    def refresh_mhz(self) -> int:
+    def refresh(self) -> int:
         return self._ptr.refresh
 
     @property

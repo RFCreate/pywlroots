@@ -110,11 +110,7 @@ typedef int32_t clockid_t;
 
 # wlr/backend.h
 CDEF += """
-struct wlr_backend_impl;
-
 struct wlr_backend {
-    const struct wlr_backend_impl *impl;
-
     struct {
         struct wl_signal destroy;
         struct wl_signal new_input;
@@ -242,7 +238,6 @@ void wlr_buffer_end_data_ptr_access(struct wlr_buffer *buffer);
 # wlr/types/wlr_cursor.h
 CDEF += """
 struct wlr_cursor {
-    struct wlr_cursor_state *state;
     double x, y;
 
     struct {
@@ -308,13 +303,6 @@ void wlr_cursor_set_xcursor(struct wlr_cursor *cur,
 # wlr/types/wlr_compositor.h
 CDEF += """
 struct wlr_compositor {
-    struct wl_global *global;
-    struct wlr_renderer *renderer;
-
-    struct {
-        struct wl_signal new_surface;
-        struct wl_signal destroy;
-    } events;
     ...;
 };
 
@@ -322,47 +310,16 @@ struct wlr_compositor *wlr_compositor_create(struct wl_display *display,
     uint32_t version, struct wlr_renderer *renderer);
 
 struct wlr_surface_state {
-    uint32_t committed;
-    uint32_t seq;
-
-    struct wlr_buffer *buffer;
-    int32_t dx, dy;
-    struct pixman_region32 surface_damage, buffer_damage;
-    struct pixman_region32 opaque, input;
     enum wl_output_transform transform;
-    int32_t scale;
-    struct wl_list frame_callback_list;
-
     int width, height;
-    int buffer_width, buffer_height;
-
-    struct wl_list subsurfaces_below;
-    struct wl_list subsurfaces_above;
     ...;
 };
-
 struct wlr_surface_role {
-    const char *name;
-    bool no_object;
-    void (*commit)(struct wlr_surface *surface);
-    void (*unmap)(struct wlr_surface *surface);
-    void (*destroy)(struct wlr_surface *surface);
     ...;
 };
 
 struct wlr_surface {
-    struct wl_resource *resource;
-    struct wlr_client_buffer *buffer;
-    struct pixman_region32 buffer_damage;
-    struct pixman_region32 opaque_region;
-    struct pixman_region32 input_region;
     struct wlr_surface_state current, pending;
-
-    struct wl_list cached;
-    bool mapped;
-
-    const struct wlr_surface_role *role;
-    struct wl_resource *role_resource;
 
     struct {
         struct wl_signal client_commit;
@@ -374,8 +331,6 @@ struct wlr_surface {
         struct wl_signal destroy;
     } events;
 
-    struct wl_list current_outputs;
-    struct wlr_addon_set addons;
     void *data;
     ...;
 };
@@ -399,17 +354,7 @@ struct wlr_subsurface_parent_state {
 };
 
 struct wlr_subsurface {
-    struct wl_resource *resource;
     struct wlr_surface *surface;
-    struct wlr_surface *parent;
-
-    struct wlr_subsurface_parent_state current, pending;
-
-    uint32_t cached_seq;
-    bool has_cache;
-
-    bool synchronized;
-    bool added;
 
     struct {
         struct wl_signal destroy;
@@ -420,7 +365,6 @@ struct wlr_subsurface {
 };
 
 struct wlr_subcompositor {
-    struct wl_global *global;
     ...;
 };
 
@@ -430,7 +374,6 @@ struct wlr_subcompositor *wlr_subcompositor_create(struct wl_display *display);
 # wlr/types/wlr_damage_ring.h
 CDEF += """
 struct wlr_damage_ring {
-    struct pixman_region32 current;
     ...;
 };
 """
@@ -438,13 +381,6 @@ struct wlr_damage_ring {
 # wlr/types/wlr_data_control_v1.h
 CDEF += """
 struct wlr_data_control_manager_v1 {
-    struct wl_global *global;
-    struct wl_list devices; // wlr_data_control_device_v1::link
-
-    struct {
-        struct wl_signal destroy;
-        struct wl_signal new_device; // wlr_data_control_device_v1
-    } events;
     ...;
 };
 struct wlr_data_control_manager_v1 *wlr_data_control_manager_v1_create(
@@ -473,18 +409,8 @@ struct wlr_drag_icon {
 };
 
 struct wlr_drag {
-    enum wlr_drag_grab_type grab_type;
-    struct wlr_seat_keyboard_grab keyboard_grab;
-    struct wlr_seat_pointer_grab pointer_grab;
-    struct wlr_seat_touch_grab touch_grab;
-    struct wlr_seat *seat;
-    struct wlr_seat_client *seat_client;
-    struct wlr_seat_client *focus_client;
     struct wlr_drag_icon *icon; // can be NULL
-    struct wlr_surface *focus; // can be NULL
     struct wlr_data_source *source; // can be NULL
-    bool started, dropped, cancelling;
-    int32_t grab_touch_id, touch_id; // if WLR_DRAG_GRAB_TOUCH
     struct {
         struct wl_signal focus;
         struct wl_signal motion; // wlr_drag_motion_event
@@ -497,24 +423,16 @@ struct wlr_drag {
 
 struct wlr_drag_motion_event {
     struct wlr_drag *drag;
-    uint32_t time;
     double sx, sy;
     ...;
 };
 
 struct wlr_drag_drop_event {
     struct wlr_drag *drag;
-    uint32_t time;
     ...;
 };
 
 struct wlr_data_source {
-    const struct wlr_data_source_impl *impl;
-    struct wl_array mime_types;
-    int32_t actions;
-    bool accepted;
-    enum wl_data_device_manager_dnd_action current_dnd_action;
-    uint32_t compositor_action;
     struct {
         struct wl_signal destroy;
     } events;
@@ -527,9 +445,6 @@ void wlr_data_source_destroy(struct wlr_data_source *source);
 # wlr/types/wlr_export_dmabuf_v1.h
 CDEF += """
 struct wlr_export_dmabuf_manager_v1 {
-    struct wl_global *global;
-    struct wl_list frames; // wlr_export_dmabuf_frame_v1::link
-
     struct {
         struct wl_signal destroy;
     } events;
@@ -537,13 +452,6 @@ struct wlr_export_dmabuf_manager_v1 {
 };
 
 struct wlr_export_dmabuf_frame_v1 {
-    struct wl_resource *resource;
-    struct wlr_export_dmabuf_manager_v1 *manager;
-    struct wl_list link; // wlr_export_dmabuf_manager_v1::frames
-
-    struct wlr_output *output;
-
-    bool cursor_locked;
     ...;
 };
 
@@ -554,8 +462,6 @@ struct wlr_export_dmabuf_manager_v1 *wlr_export_dmabuf_manager_v1_create(
 # wlr/types/wlr_viewporter.h
 CDEF += """
 struct wlr_viewporter {
-    struct wl_global *global;
-
     struct {
         struct wl_signal destroy;
     } events;
@@ -568,11 +474,6 @@ struct wlr_viewporter *wlr_viewporter_create(struct wl_display *display);
 # wlr/types/wlr_foreign_toplevel_management_v1.h
 CDEF += """
 struct wlr_foreign_toplevel_manager_v1 {
-    struct wl_event_loop *event_loop;
-    struct wl_global *global;
-    struct wl_list resources; // wl_resource_get_link
-    struct wl_list toplevels; // wlr_foreign_toplevel_handle_v1::link
-
     struct {
         struct wl_signal destroy;
     } events;
@@ -583,15 +484,9 @@ struct wlr_foreign_toplevel_manager_v1 {
 
 struct wlr_foreign_toplevel_handle_v1 {
     struct wlr_foreign_toplevel_manager_v1 *manager;
-    struct wl_list resources;
-    struct wl_list link;
-    struct wl_event_source *idle_source;
-
     char *title;
     char *app_id;
     struct wlr_foreign_toplevel_handle_v1 *parent;
-    struct wl_list outputs; // wlr_foreign_toplevel_v1_output
-    uint32_t state; // wlr_foreign_toplevel_v1_state
 
     struct {
         struct wl_signal request_maximize;
@@ -619,7 +514,6 @@ struct wlr_foreign_toplevel_handle_v1_minimized_event {
 };
 struct wlr_foreign_toplevel_handle_v1_activated_event {
     struct wlr_foreign_toplevel_handle_v1 *toplevel;
-    struct wlr_seat *seat;
     ...;
 };
 struct wlr_foreign_toplevel_handle_v1_fullscreen_event {
@@ -665,11 +559,6 @@ void wlr_foreign_toplevel_handle_v1_set_parent(
 # wlr/types/wlr_fractional_scale_v1.h
 CDEF += """
 struct wlr_fractional_scale_manager_v1 {
-    struct wl_global *global;
-
-    struct {
-        struct wl_signal destroy;
-    } events;
     ...;
 };
 
@@ -684,9 +573,6 @@ struct wlr_fractional_scale_manager_v1 *wlr_fractional_scale_manager_v1_create(
 # wlr/types/wlr_gamma_control_v1.h
 CDEF += """
 struct wlr_gamma_control_manager_v1 {
-    struct wl_global *global;
-    struct wl_list controls; // wlr_gamma_control_v1::link
-
     struct {
         struct wl_signal destroy;
         struct wl_signal set_gamma;
@@ -702,23 +588,15 @@ struct wlr_gamma_control_manager_v1 *wlr_gamma_control_manager_v1_create(
 # wlr/types/wlr_idle_inhibit_v1.h
 CDEF += """
 struct wlr_idle_inhibit_manager_v1 {
-    struct wl_list inhibitors; // wlr_idle_inhibit_inhibitor_v1::link
-    struct wl_global *global;
-
     struct {
         struct wl_signal new_inhibitor;
         struct wl_signal destroy;
     } events;
-
-    void *data;
     ...;
 };
 
 struct wlr_idle_inhibitor_v1 {
     struct wlr_surface *surface;
-    struct wl_resource *resource;
-
-    struct wl_list link; // wlr_idle_inhibit_manager_v1::inhibitors;
 
     struct {
         struct wl_signal destroy;
@@ -811,26 +689,12 @@ struct wlr_keyboard_modifiers {
 struct wlr_keyboard {
     struct wlr_input_device base;
 
-    const struct wlr_keyboard_impl *impl;
-    struct wlr_keyboard_group *group;
-
-    char *keymap_string;
-    size_t keymap_size;
-    int keymap_fd;
     struct xkb_keymap *keymap;
     struct xkb_state *xkb_state;
-    xkb_led_index_t led_indexes[WLR_LED_COUNT];
-    xkb_mod_index_t mod_indexes[WLR_MODIFIER_COUNT];
 
-    uint32_t leds;
     uint32_t keycodes[WLR_KEYBOARD_KEYS_CAP];
     size_t num_keycodes;
     struct wlr_keyboard_modifiers modifiers;
-
-    struct {
-        int32_t rate;
-        int32_t delay;
-    } repeat_info;
 
     struct {
         struct wl_signal key;
@@ -897,7 +761,6 @@ struct wlr_output_mode {
     int32_t width, height;
     int32_t refresh; // mHz
     bool preferred;
-    struct wl_list link;
     ...;
 };
 
@@ -917,12 +780,6 @@ struct wlr_output_state {
 };
 
 struct wlr_output {
-    const struct wlr_output_impl *impl;
-    struct wlr_backend *backend;
-
-    struct wl_global *global;
-    struct wl_list resources;
-
     char *name;
     char *description; // may be NULL
     char *make, *model, *serial;
@@ -931,20 +788,10 @@ struct wlr_output {
     // Note: some backends may have zero modes
     struct wl_list modes; // wlr_output_mode::link
     struct wlr_output_mode *current_mode;
-    int32_t width, height;
-    int32_t refresh; // mHz, may be zero
 
     bool enabled;
     float scale;
-    enum wl_output_subpixel subpixel;
     enum wl_output_transform transform;
-    enum wlr_output_adaptive_sync_status adaptive_sync_status;
-    uint32_t render_format;
-
-    bool needs_frame;
-    bool frame_pending;
-    bool non_desktop;
-    uint32_t commit_seq;
 
     struct {
         struct wl_signal frame;
@@ -958,19 +805,6 @@ struct wlr_output {
         struct wl_signal request_state;
         struct wl_signal destroy;
     } events;
-
-    struct wl_event_source *idle_frame;
-    struct wl_event_source *idle_done;
-    int attach_render_locks;
-    struct wl_list cursors;
-    struct wlr_output_cursor *hardware_cursor;
-    struct wlr_swapchain *cursor_swapchain;
-    struct wlr_buffer *cursor_front_buffer;
-    int software_cursor_locks;
-    struct wlr_allocator *allocator;
-    struct wlr_renderer *renderer;
-    struct wlr_swapchain *swapchain;
-    struct wlr_addon_set addons;
 
     void *data;
     ...;
@@ -1045,15 +879,11 @@ enum wl_output_transform wlr_output_transform_compose(
 # wlr/types/wlr_output_layout.h
 CDEF += """
 struct wlr_output_layout {
-    struct wl_list outputs;
-
     struct {
         struct wl_signal add;
         struct wl_signal change;
         struct wl_signal destroy;
     } events;
-
-    void *data;
     ...;
 };
 struct wlr_output_layout *wlr_output_layout_create(void);
@@ -1085,13 +915,6 @@ struct wlr_output *wlr_output_layout_output_at(struct wlr_output_layout *layout,
 # wlr/types/wlr_output_management_v1.h
 CDEF += """
 struct wlr_output_manager_v1 {
-    struct wl_display *display;
-    struct wl_global *global;
-    struct wl_list resources; // wl_resource_get_link
-    struct wl_list heads; // wlr_output_head_v1::link
-    uint32_t serial;
-    bool current_configuration_dirty;
-
     struct {
         struct wl_signal apply; // wlr_output_configuration_v1
         struct wl_signal test; // wlr_output_configuration_v1
@@ -1104,22 +927,11 @@ struct wlr_output_manager_v1 {
 
 struct wlr_output_configuration_v1 {
     struct wl_list heads; // wlr_output_configuration_head_v1::link
-
-    // client state
-    struct wlr_output_manager_v1 *manager;
-    uint32_t serial;
-    bool finalized; // client has requested to apply the config
-    bool finished; // feedback has been sent by the compositor
-    struct wl_resource *resource; // can be NULL if destroyed early
     ...;
 };
 
 struct wlr_output_configuration_head_v1 {
     struct wlr_output_head_v1_state state;
-    struct wlr_output_configuration_v1 *config;
-    struct wl_list link; // wlr_output_configuration_v1::heads
-    // client state
-    struct wl_resource *resource; // can be NULL if finalized or disabled
     ...;
 };
 
@@ -1164,25 +976,16 @@ void wlr_output_head_v1_state_apply(
 # wlr/types/wlr_output_power_management_v1.h
 CDEF += """
 struct wlr_output_power_manager_v1 {
-    struct wl_global *global;
-    struct wl_list output_powers; // wlr_output_power_v1::link
-
     struct {
         struct wl_signal set_mode; // wlr_output_power_v1_set_mode_event
         struct wl_signal destroy;
     } events;
-
-    void *data;
     ...;
 };
 
 struct wlr_output_power_v1 {
-    struct wl_resource *resource;
     struct wlr_output *output;
     struct wlr_output_power_manager_v1 *manager;
-    struct wl_list link;
-
-    void *data;
     ...;
 };
 
@@ -1200,24 +1003,7 @@ struct wlr_output_power_manager_v1 *wlr_output_power_manager_v1_create(
 CDEF += """
 struct wlr_pointer {
     struct wlr_input_device base;
-    const struct wlr_pointer_impl *impl;
     char *output_name;
-
-    struct {
-        struct wl_signal motion;
-        struct wl_signal motion_absolute;
-        struct wl_signal button;
-        struct wl_signal axis;
-        struct wl_signal frame;
-        struct wl_signal swipe_begin;
-        struct wl_signal swipe_update;
-        struct wl_signal swipe_end;
-        struct wl_signal pinch_begin;
-        struct wl_signal pinch_update;
-        struct wl_signal pinch_end;
-        struct wl_signal hold_begin;
-        struct wl_signal hold_end;
-    } events;
 
     void *data;
     ...;
@@ -1358,37 +1144,23 @@ struct wlr_pointer_constraint_v1_state {
 };
 
 struct wlr_pointer_constraint_v1 {
-    struct wlr_pointer_constraints_v1 *pointer_constraints;
-
-    struct wl_resource *resource;
     struct wlr_surface *surface;
-    struct wlr_seat *seat;
-    enum zwp_pointer_constraints_v1_lifetime lifetime;
     enum wlr_pointer_constraint_v1_type type;
     struct pixman_region32 region;
 
     struct wlr_pointer_constraint_v1_state current, pending;
 
-    struct wl_list link; // wlr_pointer_constraints_v1::constraints
-
     struct {
         struct wl_signal set_region;
         struct wl_signal destroy;
     } events;
-
-   void *data;
    ...;
 };
 
 struct wlr_pointer_constraints_v1 {
-    struct wl_global *global;
-    struct wl_list constraints; // wlr_pointer_constraint_v1::link
-
     struct {
         struct wl_signal new_constraint;
     } events;
-
-    void *data;
     ...;
 };
 
@@ -1403,11 +1175,6 @@ void wlr_pointer_constraint_v1_send_deactivated(
 # wlr/types/wlr_pointer_gestures_v1.h
 CDEF += """
 struct wlr_pointer_gestures_v1 {
-    struct wl_global *global;
-    struct wl_list swipes;
-    struct wl_list pinches;
-    struct wl_list holds;
-
     struct {
         struct wl_signal destroy;
     } events;
@@ -1470,14 +1237,6 @@ void wlr_pointer_gestures_v1_send_hold_end(
 # wlr/types/wlr_primary_selection_v1.h
 CDEF += """
 struct wlr_primary_selection_v1_device_manager {
-    struct wl_global *global;
-    struct wl_list devices;
-
-    struct {
-        struct wl_signal destroy;
-    } events;
-
-    void *data;
     ...;
 };
 struct wlr_primary_selection_v1_device_manager *
@@ -1502,9 +1261,6 @@ void wlr_seat_set_primary_selection(struct wlr_seat *seat,
 # wlr/types/wlr_relative_pointer_v1.h
 CDEF += """
 struct wlr_relative_pointer_manager_v1 {
-    struct wl_global *global;
-    struct wl_list relative_pointers; // wlr_relative_pointer_v1::link
-
     struct {
         struct wl_signal destroy;
         struct wl_signal new_relative_pointer; // wlr_relative_pointer_v1
@@ -1513,11 +1269,6 @@ struct wlr_relative_pointer_manager_v1 {
 };
 
 struct wlr_relative_pointer_v1 {
-    struct wl_resource *resource;
-    struct wl_resource *pointer_resource;
-    struct wlr_seat *seat;
-    struct wl_list link; // wlr_relative_pointer_manager_v1::relative_pointers
-
     struct {
         struct wl_signal destroy;
     } events;
@@ -1552,17 +1303,10 @@ enum wlr_scene_node_type {
 struct wlr_scene_node {
     enum wlr_scene_node_type type;
     struct wlr_scene_tree *parent;
-    struct wl_list link;
 
     bool enabled;
     int x, y;
-
-    struct {
-        struct wl_signal destroy;
-    } events;
-
     void *data;
-    struct wlr_addon_set addons;
     ...;
 };
 
@@ -1574,62 +1318,34 @@ struct wlr_scene_tree {
 
 struct wlr_scene {
     struct wlr_scene_tree tree;
-    struct wl_list outputs;
     ...;
 };
 
 struct wlr_scene_surface {
-    struct wlr_scene_buffer *buffer;
     struct wlr_surface *surface;
     ...;
 };
 
 struct wlr_scene_rect {
     struct wlr_scene_node node;
-    int width, height;
-    float color[4];
     ...;
 };
 
 struct wlr_scene_buffer {
     struct wlr_scene_node node;
-    struct wlr_buffer *buffer;
-
-    struct {
-        struct wl_signal outputs_update;
-        struct wl_signal output_enter; // struct wlr_scene_output
-        struct wl_signal output_leave; // struct wlr_scene_output
-        struct wl_signal output_sample; // struct wlr_scene_output
-        struct wl_signal frame_done; // struct timespec
-    } events;
-
-    wlr_scene_buffer_point_accepts_input_func_t point_accepts_input;
-    struct wlr_scene_output *primary_output;
     ...;
 };
 
 struct wlr_scene_output {
-    struct wlr_output *output;
-    struct wl_list link;
-    struct wlr_scene *scene;
-    struct wlr_addon addon;
-    struct wlr_damage_ring damage_ring;
-    int x, y;
-
-    struct {
-        struct wl_signal destroy;
-    } events;
     ...;
 };
 
 struct wlr_scene_layer_surface_v1 {
     struct wlr_scene_tree *tree;
-    struct wlr_layer_surface_v1 *layer_surface;
     ...;
 };
 
 struct wlr_scene_output_state_options {
-    struct wlr_scene_timer *timer;
     ...;
 };
 
@@ -1734,9 +1450,6 @@ struct wlr_scene_tree *wlr_scene_drag_icon_create(
 # wlr/types/wlr_screencopy_v1.h
 CDEF += """
 struct wlr_screencopy_manager_v1 {
-    struct wl_global *global;
-    struct wl_list frames; // wlr_screencopy_frame_v1::link
-
     struct {
         struct wl_signal destroy;
     } events;
@@ -1763,38 +1476,18 @@ int clock_gettime(clockid_t clk_id, struct timespec *tp);
 #define WLR_POINTER_BUTTONS_CAP 16
 
 struct wlr_seat_touch_grab {
-    const struct wlr_touch_grab_interface *interface;
-    struct wlr_seat *seat;
-    void *data;
     ...;
 };
 struct wlr_seat_keyboard_grab {
-    const struct wlr_keyboard_grab_interface *interface;
-    struct wlr_seat *seat;
-    void *data;
     ...;
 };
 struct wlr_seat_pointer_grab {
-    const struct wlr_pointer_grab_interface *interface;
-    struct wlr_seat *seat;
-    void *data;
     ...;
 };
 
 struct wlr_seat_pointer_state {
-    struct wlr_seat *seat;
-    struct wlr_seat_client *focused_client;
     struct wlr_surface *focused_surface;
     double sx, sy;
-
-    struct wlr_seat_pointer_grab *grab;
-    struct wlr_seat_pointer_grab *default_grab;
-
-    uint32_t buttons[WLR_POINTER_BUTTONS_CAP];
-    size_t button_count;
-    uint32_t grab_button;
-    uint32_t grab_serial;
-    uint32_t grab_time;
 
     struct {
         struct wl_signal focus_change;
@@ -1802,14 +1495,7 @@ struct wlr_seat_pointer_state {
     ...;
 };
 struct wlr_seat_keyboard_state {
-    struct wlr_seat *seat;
-    struct wlr_keyboard *keyboard;
-
-    struct wlr_seat_client *focused_client;
     struct wlr_surface *focused_surface;
-
-    struct wlr_seat_keyboard_grab *grab;
-    struct wlr_seat_keyboard_grab *default_grab;
 
     struct {
         struct wl_signal focus_change;
@@ -1818,41 +1504,16 @@ struct wlr_seat_keyboard_state {
 };
 
 struct wlr_seat_touch_state {
-    struct wlr_seat *seat;
     struct wl_list touch_points; // wlr_touch_point.link
 
     uint32_t grab_serial;
     uint32_t grab_id;
-
-    struct wlr_seat_touch_grab *grab;
-    struct wlr_seat_touch_grab *default_grab;
     ...;
 };
 
 struct wlr_seat {
-    struct wl_global *global;
-    struct wl_display *display;
-    struct wl_list clients;
-
-    char *name;
-    uint32_t capabilities;
-
-    struct wlr_data_source *selection_source;
-    uint32_t selection_serial;
-    struct wl_list selection_offers; // wlr_data_offer::link
-
-    struct wlr_primary_selection_source *primary_selection_source;
-    uint32_t primary_selection_serial;
-
-    // `drag` goes away before `drag_source`, when the implicit grab ends
-    struct wlr_drag *drag;
-    struct wlr_data_source *drag_source;
-    uint32_t drag_serial;
-    struct wl_list drag_offers; // wlr_data_offer::link
-
     struct wlr_seat_pointer_state pointer_state;
     struct wlr_seat_keyboard_state keyboard_state;
-    struct wlr_seat_touch_state touch_state;
 
     struct {
         struct wl_signal pointer_grab_begin;
@@ -1900,7 +1561,6 @@ struct wlr_seat_request_set_selection_event {
 };
 
 struct wlr_seat_request_set_primary_selection_event {
-    struct wlr_primary_selection_source *source;
     uint32_t serial;
     ...;
 };
@@ -2008,14 +1668,6 @@ enum wlr_server_decoration_manager_mode {
     ...
 };
 struct wlr_server_decoration_manager {
-    struct wl_global *global;
-    struct wl_list resources; // wl_resource_get_link
-    struct wl_list decorations; // wlr_server_decoration::link
-    uint32_t default_mode; // enum wlr_server_decoration_manager_mode
-    struct {
-        struct wl_signal new_decoration;
-        struct wl_signal destroy;
-    } events;
     void *data;
     ...;
 };
@@ -2034,8 +1686,6 @@ struct wlr_single_pixel_buffer_manager_v1 *wlr_single_pixel_buffer_manager_v1_cr
 # wlr/types/wlr_session_lock_v1.h
 CDEF += """
 struct wlr_session_lock_manager_v1 {
-    struct wl_global *global;
-
     struct {
         struct wl_signal new_lock; // struct wlr_session_lock_v1 *
         struct wl_signal destroy;
@@ -2046,10 +1696,6 @@ struct wlr_session_lock_manager_v1 {
 };
 
 struct wlr_session_lock_v1 {
-    struct wl_resource *resource;
-
-    struct wl_list surfaces; // struct wlr_session_lock_surface_v1.link
-
     struct {
         struct wl_signal new_surface; // struct wlr_session_lock_surface_v1 *
         struct wl_signal unlock;
@@ -2061,32 +1707,17 @@ struct wlr_session_lock_v1 {
 };
 
 struct wlr_session_lock_surface_v1_state {
-    uint32_t width, height;
-    uint32_t configure_serial;
     ...;
 };
 
 struct wlr_session_lock_surface_v1_configure {
-    struct wl_list link; // wlr_session_lock_surface_v1.configure_list
-    uint32_t serial;
-
-    uint32_t width, height;
     ...;
 };
 
 struct wlr_session_lock_surface_v1 {
-    struct wl_resource *resource;
-    struct wl_list link; // wlr_session_lock_v1.surfaces
-
     struct wlr_output *output;
     struct wlr_surface *surface;
-
     bool configured;
-
-    struct wl_list configure_list; // wlr_session_lock_surface_v1_configure.link
-
-    struct wlr_session_lock_surface_v1_state current;
-    struct wlr_session_lock_surface_v1_state pending;
 
     struct {
         struct wl_signal destroy;
@@ -2145,16 +1776,8 @@ struct wlr_switch *wlr_switch_from_input_device(
 CDEF += """
 struct wlr_touch {
     struct wlr_input_device base;
-    const struct wlr_touch_impl *impl;
     char *output_name;
     double width_mm, height_mm;
-    struct {
-        struct wl_signal down; // struct wlr_touch_down_event
-        struct wl_signal up; // struct wlr_touch_up_event
-        struct wl_signal motion; // struct wlr_touch_motion_event
-        struct wl_signal cancel; // struct wlr_touch_cancel_event
-        struct wl_signal frame;
-    } events;
 
     void *data;
     ...;
@@ -2199,9 +1822,6 @@ struct wlr_touch *wlr_touch_from_input_device(
 # wlr/types/wlr_virtual_keyboard_v1.h
 CDEF += """
 struct wlr_virtual_keyboard_manager_v1 {
-    struct wl_global *global;
-    struct wl_list virtual_keyboards; // struct wlr_virtual_keyboard_v1*
-
     struct {
         struct wl_signal new_virtual_keyboard; // struct wlr_virtual_keyboard_v1*
         struct wl_signal destroy;
@@ -2211,11 +1831,7 @@ struct wlr_virtual_keyboard_manager_v1 {
 
 struct wlr_virtual_keyboard_v1 {
     struct wlr_keyboard keyboard;
-    struct wl_resource *resource;
-    struct wlr_seat *seat;
     bool has_keymap;
-
-    struct wl_list link;
     ...;
 };
 
@@ -2226,8 +1842,6 @@ struct wlr_virtual_keyboard_manager_v1* wlr_virtual_keyboard_manager_v1_create(
 # wlr/types/wlr_virtual_pointer_v1.h
 CDEF += """
 struct wlr_virtual_pointer_manager_v1 {
-    struct wl_global *global;
-    struct wl_list virtual_pointers;
     struct {
         struct wl_signal new_virtual_pointer;
         struct wl_signal destroy;
@@ -2237,18 +1851,14 @@ struct wlr_virtual_pointer_manager_v1 {
 
 struct wlr_virtual_pointer_v1 {
     struct wlr_pointer pointer;
-    struct wl_resource *resource;
     struct wlr_pointer_axis_event axis_event[2];
     enum wl_pointer_axis axis;
     bool axis_valid[2];
-    struct wl_list link;
     ...;
 };
 
 struct wlr_virtual_pointer_v1_new_pointer_event {
     struct wlr_virtual_pointer_v1 *new_pointer;
-    struct wlr_seat *suggested_seat;
-    struct wlr_output *suggested_output;
     ...;
 };
 
@@ -2271,19 +1881,11 @@ struct wlr_xcursor *wlr_xcursor_manager_get_xcursor(
 # wlr/xcursor.h
 CDEF += """
 struct wlr_xcursor_image {
-    uint32_t width;
-    uint32_t height;
-    uint32_t hotspot_x;
-    uint32_t hotspot_y;
-    uint32_t delay;
-    uint8_t *buffer;
     ...;
 };
 struct wlr_xcursor {
     unsigned int image_count;
     struct wlr_xcursor_image **images;
-    char *name;
-    uint32_t total_delay;
     ...;
 };
 """
@@ -2291,9 +1893,6 @@ struct wlr_xcursor {
 # wlr/types/wlr_xdg_activation_v1.h
 CDEF += """
 struct wlr_xdg_activation_v1 {
-    uint32_t token_timeout_msec;
-    struct wl_list tokens;
-
     struct {
         struct wl_signal destroy;
         struct wl_signal request_activate;
@@ -2303,8 +1902,6 @@ struct wlr_xdg_activation_v1 {
 };
 
 struct wlr_xdg_activation_v1_request_activate_event {
-    struct wlr_xdg_activation_v1 *activation;
-    struct wlr_xdg_activation_token_v1 *token;
     struct wlr_surface *surface;
     ...;
 };
@@ -2323,9 +1920,6 @@ enum wlr_xdg_toplevel_decoration_v1_mode {
 };
 
 struct wlr_xdg_decoration_manager_v1 {
-    struct wl_global *global;
-    struct wl_list decorations; // wlr_xdg_toplevel_decoration::link
-
     struct {
         struct wl_signal new_toplevel_decoration; // struct wlr_xdg_toplevel_decoration *
         struct wl_signal destroy;
@@ -2336,29 +1930,16 @@ struct wlr_xdg_decoration_manager_v1 {
 };
 
 struct wlr_xdg_toplevel_decoration_v1_configure {
-    struct wl_list link; // wlr_xdg_toplevel_decoration::configure_list
-    struct wlr_xdg_surface_configure *surface_configure;
-    enum wlr_xdg_toplevel_decoration_v1_mode mode;
     ...;
 };
 
 struct wlr_xdg_toplevel_decoration_v1_state {
-    enum wlr_xdg_toplevel_decoration_v1_mode mode;
     ...;
 };
 
 struct wlr_xdg_toplevel_decoration_v1 {
-    struct wl_resource *resource;
     struct wlr_xdg_toplevel *toplevel;
     struct wlr_xdg_decoration_manager_v1 *manager;
-    struct wl_list link; // wlr_xdg_decoration_manager_v1::link
-
-    struct wlr_xdg_toplevel_decoration_v1_state current, pending;
-
-    enum wlr_xdg_toplevel_decoration_v1_mode scheduled_mode;
-    enum wlr_xdg_toplevel_decoration_v1_mode requested_mode;
-
-    struct wl_list configure_list; // wlr_xdg_toplevel_decoration_v1_configure::link
 
     struct {
         struct wl_signal destroy;
@@ -2380,11 +1961,6 @@ uint32_t wlr_xdg_toplevel_decoration_v1_set_mode(
 # wlr/types/wlr_xdg_output_v1.h
 CDEF += """
 struct wlr_xdg_output_manager_v1 {
-    struct wl_global *global;
-    struct wlr_output_layout *layout;
-
-    struct wl_list outputs;
-
     struct {
         struct wl_signal destroy;
     } events;
@@ -2401,7 +1977,6 @@ struct wlr_addon_set {
     ...;
 };
 struct wlr_addon {
-    const struct wlr_addon_interface *impl;
     ...;
 };
 """
@@ -2409,11 +1984,6 @@ struct wlr_addon {
 # wlr/types/wlr_xdg_shell.h
 CDEF += """
 struct wlr_xdg_shell {
-    struct wl_global *global;
-    struct wl_list clients;
-    struct wl_list popup_grabs;
-    uint32_t ping_timeout;
-
     struct {
         struct wl_signal new_surface;
         struct wl_signal destroy;
@@ -2424,76 +1994,31 @@ struct wlr_xdg_shell {
 };
 
 struct wlr_xdg_client {
-    struct wlr_xdg_shell *shell;
-    struct wl_resource *resource;
-    struct wl_client *client;
-    struct wl_list surfaces;
-
-    struct wl_list link; // wlr_xdg_shell::clients
-
-    uint32_t ping_serial;
-    struct wl_event_source *ping_timer;
     ...;
 };
 
 struct wlr_xdg_positioner_rules {
-    struct wlr_box anchor_rect;
-    enum xdg_positioner_anchor anchor;
-    enum xdg_positioner_gravity gravity;
-    enum xdg_positioner_constraint_adjustment constraint_adjustment;
-
-    bool reactive;
-
-    bool has_parent_configure_serial;
-    uint32_t parent_configure_serial;
-
-    struct {
-        int32_t width, height;
-    } size, parent_size;
-
-    struct {
-        int32_t x, y;
-    } offset;
     ...;
 };
 
 struct wlr_xdg_popup_state {
     struct wlr_box geometry;
-
     bool reactive;
     ...;
 };
 
-enum wlr_xdg_popup_configure_field {
-    WLR_XDG_POPUP_CONFIGURE_REPOSITION_TOKEN = 1 << 0,
-    ...
-};
-
 struct wlr_xdg_popup_configure {
-    uint32_t fields; // enum wlr_xdg_popup_configure_field
-    struct wlr_box geometry;
-    struct wlr_xdg_positioner_rules rules;
-    uint32_t reposition_token;
     ...;
 };
 
 struct wlr_xdg_popup {
     struct wlr_xdg_surface *base;
-    struct wl_list link;
-
-    struct wl_resource *resource;
     struct wlr_surface *parent;
-    struct wlr_seat *seat;
-
-    struct wlr_xdg_popup_configure scheduled;
-
     struct wlr_xdg_popup_state current, pending;
 
     struct {
         struct wl_signal reposition;
     } events;
-
-    struct wl_list grab_link; // wlr_xdg_popup_grab.popups
     ...;
 };
 
@@ -2501,18 +2026,10 @@ struct wlr_xdg_shell *wlr_xdg_shell_create(struct wl_display *display,
     uint32_t version);
 
 struct wlr_xdg_toplevel_state {
-    bool maximized, fullscreen, resizing, activated;
-    uint32_t tiled; // enum wlr_edges
-    uint32_t width, height;
-    uint32_t max_width, max_height;
-    uint32_t min_width, min_height;
     ...;
 };
 
 struct wlr_xdg_toplevel_configure {
-    bool maximized, fullscreen, resizing, activated;
-    uint32_t tiled; // enum wlr_edges
-    uint32_t width, height;
     ...;
 };
 
@@ -2523,17 +2040,9 @@ struct wlr_xdg_toplevel_requested {
 };
 
 struct wlr_xdg_toplevel {
-    struct wl_resource *resource;
     struct wlr_xdg_surface *base;
-
     struct wlr_xdg_toplevel *parent;
-
-    struct wlr_xdg_toplevel_state current, pending;
-
-    struct wlr_xdg_toplevel_configure scheduled;
-
     struct wlr_xdg_toplevel_requested requested;
-
     char *title;
     char *app_id;
 
@@ -2567,19 +2076,13 @@ enum wlr_xdg_toplevel_wm_capabilities {
 };
 
 struct wlr_xdg_surface {
-    struct wlr_xdg_client *client;
-    struct wl_resource *resource;
     struct wlr_surface *surface;
-    struct wl_list link; // wlr_xdg_client::surfaces
     enum wlr_xdg_surface_role role;
-    struct wl_resource *role_resource;
 
     union {
         struct wlr_xdg_toplevel *toplevel;
         struct wlr_xdg_popup *popup;
     };
-
-    struct wl_list popups; // wlr_xdg_popup::link
 
     struct wl_event_source *configure_idle;
     uint32_t scheduled_serial;
@@ -2605,16 +2108,11 @@ struct wlr_xdg_surface {
 
 struct wlr_xdg_surface_configure {
     struct wlr_xdg_surface *surface;
-    struct wl_list link; // wlr_xdg_surface::configure_list
     uint32_t serial;
-
-    struct wlr_xdg_toplevel_configure *toplevel_configure;
     ...;
 };
 
 struct wlr_xdg_surface_state {
-    uint32_t configure_serial;
-    struct wlr_box geometry;
     ...;
 };
 
@@ -2825,8 +2323,6 @@ void wrapped_log_init(enum wlr_log_importance verbosity, wrapped_log_func_t call
 # wlr/types//wlr_layer_shell_v1.h
 CDEF += """
 struct wlr_layer_shell_v1 {
-    struct wl_global *global;
-
     struct {
         struct wl_signal new_surface;
         struct wl_signal destroy;
@@ -2852,11 +2348,6 @@ struct wlr_layer_surface_v1_state {
 struct wlr_layer_surface_v1 {
     struct wlr_surface *surface;
     struct wlr_output *output;
-    struct wl_resource *resource;
-    struct wlr_layer_shell_v1 *shell;
-    struct wl_list popups; // wlr_xdg_popup::link
-    char *namespace;
-    struct wl_list configure_list;
     struct wlr_layer_surface_v1_state current, pending;
     struct {
         struct wl_signal destroy;
@@ -2938,17 +2429,8 @@ if has_xwayland():
     };
     struct wlr_xwayland_server {
         pid_t pid;
-        struct wl_client *client;
-        struct wl_event_source *pipe_source;
-        int wm_fd[2], wl_fd[2];
         bool ready;
         time_t server_start;
-        int display;
-        char display_name[16];
-        int x_fd[2];
-        struct wl_event_source *x_fd_read_event[2];
-        struct wlr_xwayland_server_options options;
-        struct wl_display *wl_display;
         struct {
             struct wl_signal ready;
             struct wl_signal destroy;
@@ -2957,18 +2439,12 @@ if has_xwayland():
         ...;
     };
     struct wlr_xwayland {
-        struct wlr_xwayland_server *server;
-        struct wlr_xwm *xwm;
         const char *display_name;
-        struct wl_display *wl_display;
-        struct wlr_compositor *compositor;
-        struct wlr_seat *seat;
         struct {
             struct wl_signal ready;
             struct wl_signal new_surface;
             struct wl_signal remove_startup_info;
         } events;
-        int (*user_event_handler)(struct wlr_xwm *xwm, xcb_generic_event_t *event);
         void *data;
         ...;
     };
@@ -2986,15 +2462,7 @@ if has_xwayland():
         ...
     };
     struct wlr_xwayland_surface {
-        xcb_window_t window_id;
-        struct wlr_xwm *xwm;
-        uint32_t surface_id;
-        uint64_t serial;
-        struct wl_list link;
-        struct wl_list stack_link;
-        struct wl_list unpaired_link;
         struct wlr_surface *surface;
-        struct wlr_addon surface_addon;
         int16_t x, y;
         uint16_t width, height;
         bool override_redirect;
@@ -3004,24 +2472,17 @@ if has_xwayland():
         char *role;
         char *startup_id;
         pid_t pid;
-        struct wl_list children; // wlr_xwayland_surface::parent_link
         struct wlr_xwayland_surface *parent;
-        struct wl_list parent_link; // wlr_xwayland_surface::children
         xcb_atom_t *window_type;
         size_t window_type_len;
         xcb_atom_t *protocols;
         size_t protocols_len;
-        uint32_t decorations;
         xcb_icccm_wm_hints_t *hints;
         xcb_size_hints_t *size_hints;
-        xcb_ewmh_wm_strut_partial_t *strut_partial;
-        bool pinging;
-        struct wl_event_source *ping_timer;
         bool modal;
         bool fullscreen;
         bool maximized_vert, maximized_horz;
         bool minimized;
-        bool withdrawn;
         bool has_alpha;
         struct {
             struct wl_signal destroy;
@@ -3104,11 +2565,6 @@ if has_xwayland():
     } xcb_intern_atom_cookie_t;
     typedef struct xcb_connection_t xcb_connection_t;
     typedef struct xcb_intern_atom_reply_t {
-        uint8_t    response_type;
-        uint8_t    pad0;
-        uint16_t   sequence;
-        uint32_t   length;
-        xcb_atom_t atom;
         ...;
     } xcb_intern_atom_reply_t;
     typedef struct {

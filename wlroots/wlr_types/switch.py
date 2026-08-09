@@ -5,7 +5,7 @@ from weakref import WeakKeyDictionary
 
 from pywayland.server import Signal
 
-from wlroots import Ptr, PtrHasData, ffi, lib
+from wlroots import PtrHasData, ffi, lib
 
 from .input_device import InputDevice
 
@@ -36,9 +36,7 @@ class Switch(PtrHasData):
 
     def __init__(self, ptr: ffi.CData) -> None:
         self._ptr = ptr
-        self.toggle_event = Signal(
-            ptr=ffi.addressof(self._ptr.events.toggle), data_wrapper=SwitchToggleEvent
-        )
+        self.toggle_event = Signal(ptr=ffi.addressof(self._ptr.events.toggle))
 
     @staticmethod
     def from_input_device(input_device: InputDevice) -> Switch:
@@ -54,20 +52,3 @@ class Switch(PtrHasData):
         device_ptr = ffi.addressof(self._ptr.base)
         _weakkeydict[device_ptr] = self._ptr
         return InputDevice(device_ptr)
-
-
-class SwitchToggleEvent(Ptr):
-    def __init__(self, ptr: ffi.CData) -> None:
-        self._ptr = ptr
-
-    @property
-    def time_msec(self) -> int:
-        return self._ptr.time_msec
-
-    @property
-    def switch_type(self) -> SwitchType:
-        return SwitchType(self._ptr.switch_type)
-
-    @property
-    def switch_state(self) -> SwitchState:
-        return SwitchState(self._ptr.switch_state)
