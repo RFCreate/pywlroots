@@ -112,8 +112,7 @@ typedef int32_t clockid_t;
 CDEF += """
 struct wlr_backend_impl;
 
-struct wlr_backend
-{
+struct wlr_backend {
     const struct wlr_backend_impl *impl;
 
     struct {
@@ -232,6 +231,7 @@ void wlr_buffer_drop(struct wlr_buffer *buffer);
 enum wlr_buffer_data_ptr_access_flag {
     WLR_BUFFER_DATA_PTR_ACCESS_READ = 1 << 0,
     WLR_BUFFER_DATA_PTR_ACCESS_WRITE = 1 << 1,
+    ...
 };
 
 bool wlr_buffer_begin_data_ptr_access(struct wlr_buffer *buffer, uint32_t flags,
@@ -610,24 +610,29 @@ struct wlr_foreign_toplevel_handle_v1 {
 struct wlr_foreign_toplevel_handle_v1_maximized_event {
     struct wlr_foreign_toplevel_handle_v1 *toplevel;
     bool maximized;
+    ...;
 };
 struct wlr_foreign_toplevel_handle_v1_minimized_event {
     struct wlr_foreign_toplevel_handle_v1 *toplevel;
     bool minimized;
+    ...;
 };
 struct wlr_foreign_toplevel_handle_v1_activated_event {
     struct wlr_foreign_toplevel_handle_v1 *toplevel;
     struct wlr_seat *seat;
+    ...;
 };
 struct wlr_foreign_toplevel_handle_v1_fullscreen_event {
     struct wlr_foreign_toplevel_handle_v1 *toplevel;
     bool fullscreen;
     struct wlr_output *output;
+    ...;
 };
 struct wlr_foreign_toplevel_handle_v1_set_rectangle_event {
     struct wlr_foreign_toplevel_handle_v1 *toplevel;
     struct wlr_surface *surface;
     int32_t x, y, width, height;
+    ...;
 };
 
 struct wlr_foreign_toplevel_manager_v1 *wlr_foreign_toplevel_manager_v1_create(
@@ -660,21 +665,20 @@ void wlr_foreign_toplevel_handle_v1_set_parent(
 # wlr/types/wlr_fractional_scale_v1.h
 CDEF += """
 struct wlr_fractional_scale_manager_v1 {
-	struct wl_global *global;
+    struct wl_global *global;
 
-	struct {
-		struct wl_signal destroy;
-	} events;
-
-        ...;
+    struct {
+        struct wl_signal destroy;
+    } events;
+    ...;
 };
 
 
 void wlr_fractional_scale_v1_notify_scale(
-		struct wlr_surface *surface, double scale);
+    struct wlr_surface *surface, double scale);
 
 struct wlr_fractional_scale_manager_v1 *wlr_fractional_scale_manager_v1_create(
-		struct wl_display *display, uint32_t version);
+    struct wl_display *display, uint32_t version);
 """
 
 # wlr/types/wlr_gamma_control_v1.h
@@ -1216,7 +1220,6 @@ struct wlr_pointer {
     } events;
 
     void *data;
-
     ...;
 };
 
@@ -1248,11 +1251,13 @@ enum wlr_axis_source {
     WLR_AXIS_SOURCE_FINGER,
     WLR_AXIS_SOURCE_CONTINUOUS,
     WLR_AXIS_SOURCE_WHEEL_TILT,
+    ...
 };
 
 enum wlr_axis_orientation {
     WLR_AXIS_ORIENTATION_VERTICAL,
     WLR_AXIS_ORIENTATION_HORIZONTAL,
+    ...
 };
 
 struct wlr_pointer_axis_event {
@@ -1541,6 +1546,7 @@ enum wlr_scene_node_type {
     WLR_SCENE_NODE_TREE,
     WLR_SCENE_NODE_RECT,
     WLR_SCENE_NODE_BUFFER,
+    ...
 };
 
 struct wlr_scene_node {
@@ -1624,6 +1630,7 @@ struct wlr_scene_layer_surface_v1 {
 
 struct wlr_scene_output_state_options {
     struct wlr_scene_timer *timer;
+    ...;
 };
 
 void wlr_scene_node_destroy(struct wlr_scene_node *node);
@@ -1708,7 +1715,7 @@ struct wlr_scene_tree *wlr_scene_subsurface_tree_create(
     struct wlr_scene_tree *parent, struct wlr_surface *surface);
 
 void wlr_scene_subsurface_tree_set_clip(struct wlr_scene_node *node,
-		struct wlr_box *clip);
+    struct wlr_box *clip);
 
 struct wlr_scene_tree *wlr_scene_xdg_surface_create(
     struct wlr_scene_tree *parent, struct wlr_xdg_surface *xdg_surface);
@@ -1998,6 +2005,7 @@ enum wlr_server_decoration_manager_mode {
     WLR_SERVER_DECORATION_MANAGER_MODE_NONE = 0,
     WLR_SERVER_DECORATION_MANAGER_MODE_CLIENT = 1,
     WLR_SERVER_DECORATION_MANAGER_MODE_SERVER = 2,
+    ...
 };
 struct wlr_server_decoration_manager {
     struct wl_global *global;
@@ -2049,18 +2057,21 @@ struct wlr_session_lock_v1 {
     } events;
 
     void *data;
+    ...;
 };
 
 struct wlr_session_lock_surface_v1_state {
-	uint32_t width, height;
-	uint32_t configure_serial;
+    uint32_t width, height;
+    uint32_t configure_serial;
+    ...;
 };
 
 struct wlr_session_lock_surface_v1_configure {
-	struct wl_list link; // wlr_session_lock_surface_v1.configure_list
-	uint32_t serial;
+    struct wl_list link; // wlr_session_lock_surface_v1.configure_list
+    uint32_t serial;
 
-	uint32_t width, height;
+    uint32_t width, height;
+    ...;
 };
 
 struct wlr_session_lock_surface_v1 {
@@ -2078,7 +2089,7 @@ struct wlr_session_lock_surface_v1 {
     struct wlr_session_lock_surface_v1_state pending;
 
     struct {
-            struct wl_signal destroy;
+        struct wl_signal destroy;
     } events;
 
     void *data;
@@ -2110,18 +2121,19 @@ struct wlr_switch {
     } events;
 
     void *data;
-
     ...;
 };
 
 enum wlr_switch_type {
     WLR_SWITCH_TYPE_LID,
     WLR_SWITCH_TYPE_TABLET_MODE,
+    ...
 };
 
 enum wlr_switch_state {
     WLR_SWITCH_STATE_OFF = 0,
     WLR_SWITCH_STATE_ON,
+    ...
 };
 
 struct wlr_switch *wlr_switch_from_input_device(
@@ -2145,7 +2157,6 @@ struct wlr_touch {
     } events;
 
     void *data;
-
     ...;
 };
 
@@ -2266,12 +2277,14 @@ struct wlr_xcursor_image {
     uint32_t hotspot_y;
     uint32_t delay;
     uint8_t *buffer;
+    ...;
 };
 struct wlr_xcursor {
     unsigned int image_count;
     struct wlr_xcursor_image **images;
     char *name;
     uint32_t total_delay;
+    ...;
 };
 """
 
@@ -2293,6 +2306,7 @@ struct wlr_xdg_activation_v1_request_activate_event {
     struct wlr_xdg_activation_v1 *activation;
     struct wlr_xdg_activation_token_v1 *token;
     struct wlr_surface *surface;
+    ...;
 };
 
 struct wlr_xdg_activation_v1 *wlr_xdg_activation_v1_create(
@@ -2305,6 +2319,7 @@ enum wlr_xdg_toplevel_decoration_v1_mode {
     WLR_XDG_TOPLEVEL_DECORATION_V1_MODE_NONE = 0,
     WLR_XDG_TOPLEVEL_DECORATION_V1_MODE_CLIENT_SIDE = 1,
     WLR_XDG_TOPLEVEL_DECORATION_V1_MODE_SERVER_SIDE = 2,
+    ...
 };
 
 struct wlr_xdg_decoration_manager_v1 {
@@ -2451,6 +2466,7 @@ struct wlr_xdg_popup_state {
 
 enum wlr_xdg_popup_configure_field {
     WLR_XDG_POPUP_CONFIGURE_REPOSITION_TOKEN = 1 << 0,
+    ...
 };
 
 struct wlr_xdg_popup_configure {
@@ -2547,6 +2563,7 @@ enum wlr_xdg_toplevel_wm_capabilities {
     WLR_XDG_TOPLEVEL_WM_CAPABILITIES_MAXIMIZE = 1 << 1,
     WLR_XDG_TOPLEVEL_WM_CAPABILITIES_FULLSCREEN = 1 << 2,
     WLR_XDG_TOPLEVEL_WM_CAPABILITIES_MINIMIZE = 1 << 3,
+    ...
 };
 
 struct wlr_xdg_surface {
@@ -2891,26 +2908,24 @@ if has_xwayland():
     typedef uint32_t xcb_window_t;
     typedef uint32_t xcb_atom_t;
     typedef struct {
-    int32_t flags;
-    uint32_t input;
-    int32_t initial_state;
-    xcb_pixmap_t icon_pixmap;
-    xcb_window_t icon_window;
-    int32_t icon_x, icon_y;
-    xcb_pixmap_t icon_mask;
-    xcb_window_t window_group;
+        int32_t flags;
+        uint32_t input;
+        int32_t initial_state;
+        xcb_pixmap_t icon_pixmap;
+        xcb_window_t icon_window;
+        int32_t icon_x, icon_y;
+        xcb_pixmap_t icon_mask;
+        xcb_window_t window_group;
+        ...;
     } xcb_icccm_wm_hints_t;
     typedef struct {
-    uint32_t flags;
-    int32_t x, y;
-    int32_t width, height;
-    int32_t min_width, min_height;
-    int32_t max_width, max_height;
-    int32_t width_inc, height_inc;
-    int32_t min_aspect_num, min_aspect_den;
-    int32_t max_aspect_num, max_aspect_den;
-    int32_t base_width, base_height;
-    uint32_t win_gravity;
+        uint32_t flags;
+        int32_t x, y;
+        int32_t width, height;
+        int32_t min_width, min_height;
+        int32_t max_width, max_height;
+        int32_t width_inc, height_inc;
+        ...;
     } xcb_size_hints_t;
 
     struct wlr_xwm;
@@ -2961,12 +2976,14 @@ if has_xwayland():
         WLR_XWAYLAND_SURFACE_DECORATIONS_ALL = 0,
         WLR_XWAYLAND_SURFACE_DECORATIONS_NO_BORDER = 1,
         WLR_XWAYLAND_SURFACE_DECORATIONS_NO_TITLE = 2,
+        ...
     };
     enum wlr_xwayland_icccm_input_model {
         WLR_ICCCM_INPUT_MODEL_NONE = 0,
         WLR_ICCCM_INPUT_MODEL_PASSIVE = 1,
         WLR_ICCCM_INPUT_MODEL_LOCAL = 2,
         WLR_ICCCM_INPUT_MODEL_GLOBAL = 3,
+        ...
     };
     struct wlr_xwayland_surface {
         xcb_window_t window_id;
@@ -3085,7 +3102,7 @@ if has_xwayland():
     typedef struct xcb_intern_atom_cookie_t {
         ...;
     } xcb_intern_atom_cookie_t;
-    typedef ... xcb_connection_t;
+    typedef struct xcb_connection_t xcb_connection_t;
     typedef struct xcb_intern_atom_reply_t {
         uint8_t    response_type;
         uint8_t    pad0;
@@ -3094,7 +3111,9 @@ if has_xwayland():
         xcb_atom_t atom;
         ...;
     } xcb_intern_atom_reply_t;
-    typedef ... xcb_generic_error_t;
+    typedef struct {
+        ...;
+    } xcb_generic_error_t;
 
     int xcb_connection_has_error(xcb_connection_t *c);
     xcb_connection_t *xcb_connect(const char *displayname, int *screenp);
