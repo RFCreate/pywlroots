@@ -53,7 +53,7 @@ def _ensure_attachable(input_device: InputDevice) -> None:
     allowed_device_types = (
         InputDeviceType.POINTER,
         InputDeviceType.TOUCH,
-        InputDeviceType.TABLET_TOOL,
+        InputDeviceType.TABLET,
     )
     if input_device.type not in allowed_device_types:
         raise ValueError(
@@ -165,7 +165,7 @@ class Cursor(PtrHasData):
         The input device type must be one of:
             - InputDeviceType.POINTER
             - InputDeviceType.TOUCH
-            - InputDeviceType.TABLET_TOOL
+            - InputDeviceType.TABLET
 
         :param input_device:
             The input device to attach to the cursor

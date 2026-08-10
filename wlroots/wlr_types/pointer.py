@@ -14,17 +14,17 @@ _weakkeydict: WeakKeyDictionary[ffi.CData, ffi.CData] = WeakKeyDictionary()
 
 
 @enum.unique
-class AxisSource(enum.IntEnum):
-    WHEEL = lib.WLR_AXIS_SOURCE_WHEEL
-    FINGER = lib.WLR_AXIS_SOURCE_FINGER
-    CONTINUOUS = lib.WLR_AXIS_SOURCE_CONTINUOUS
-    WHEEL_TILT = lib.WLR_AXIS_SOURCE_WHEEL_TILT
+class PointerAxisSource(enum.IntEnum):
+    WHEEL = lib.WL_POINTER_AXIS_SOURCE_WHEEL
+    FINGER = lib.WL_POINTER_AXIS_SOURCE_FINGER
+    CONTINUOUS = lib.WL_POINTER_AXIS_SOURCE_CONTINUOUS
+    WHEEL_TILT = lib.WL_POINTER_AXIS_SOURCE_WHEEL_TILT
 
 
 @enum.unique
-class AxisOrientation(enum.IntEnum):
-    VERTICAL = lib.WLR_AXIS_ORIENTATION_VERTICAL
-    HORIZONTAL = lib.WLR_AXIS_ORIENTATION_HORIZONTAL
+class PointerAxis(enum.IntEnum):
+    VERTICAL = lib.WL_POINTER_AXIS_VERTICAL_SCROLL
+    HORIZONTAL = lib.WL_POINTER_AXIS_HORIZONTAL_SCROLL
 
 
 class Pointer(PtrHasData):
@@ -114,12 +114,12 @@ class PointerAxisEvent(_PointerEvent):
         self._ptr = ffi.cast("struct wlr_pointer_axis_event *", ptr)
 
     @property
-    def source(self) -> AxisSource:
-        return AxisSource(self._ptr.source)
+    def source(self) -> PointerAxisSource:
+        return PointerAxisSource(self._ptr.source)
 
     @property
-    def orientation(self) -> AxisOrientation:
-        return AxisOrientation(self._ptr.orientation)
+    def orientation(self) -> PointerAxis:
+        return PointerAxis(self._ptr.orientation)
 
     @property
     def delta(self) -> float:

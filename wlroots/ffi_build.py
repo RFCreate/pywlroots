@@ -634,7 +634,7 @@ enum wlr_input_device_type {
     WLR_INPUT_DEVICE_KEYBOARD,
     WLR_INPUT_DEVICE_POINTER,
     WLR_INPUT_DEVICE_TOUCH,
-    WLR_INPUT_DEVICE_TABLET_TOOL,
+    WLR_INPUT_DEVICE_TABLET,
     WLR_INPUT_DEVICE_TABLET_PAD,
     WLR_INPUT_DEVICE_SWITCH,
     ...
@@ -1032,25 +1032,25 @@ struct wlr_pointer_button_event {
     ...;
 };
 
-enum wlr_axis_source {
-    WLR_AXIS_SOURCE_WHEEL,
-    WLR_AXIS_SOURCE_FINGER,
-    WLR_AXIS_SOURCE_CONTINUOUS,
-    WLR_AXIS_SOURCE_WHEEL_TILT,
+enum wl_pointer_axis_source {
+    WL_POINTER_AXIS_SOURCE_WHEEL,
+    WL_POINTER_AXIS_SOURCE_FINGER,
+    WL_POINTER_AXIS_SOURCE_CONTINUOUS,
+    WL_POINTER_AXIS_SOURCE_WHEEL_TILT,
     ...
 };
 
-enum wlr_axis_orientation {
-    WLR_AXIS_ORIENTATION_VERTICAL,
-    WLR_AXIS_ORIENTATION_HORIZONTAL,
+enum wl_pointer_axis {
+    WL_POINTER_AXIS_VERTICAL_SCROLL,
+    WL_POINTER_AXIS_HORIZONTAL_SCROLL,
     ...
 };
 
 struct wlr_pointer_axis_event {
     struct wlr_pointer *pointer;
     uint32_t time_msec;
-    enum wlr_axis_source source;
-    enum wlr_axis_orientation orientation;
+    enum wl_pointer_axis_source source;
+    enum wl_pointer_axis orientation;
     double delta;
     int32_t delta_discrete;
     ...;
@@ -1603,8 +1603,8 @@ void wlr_seat_pointer_notify_motion(struct wlr_seat *wlr_seat,
 uint32_t wlr_seat_pointer_notify_button(struct wlr_seat *wlr_seat,
     uint32_t time_msec, uint32_t button, enum wlr_button_state state);
 void wlr_seat_pointer_notify_axis(struct wlr_seat *wlr_seat, uint32_t time_msec,
-    enum wlr_axis_orientation orientation, double value,
-    int32_t value_discrete, enum wlr_axis_source source);
+    enum wl_pointer_axis orientation, double value,
+    int32_t value_discrete, enum wl_pointer_axis_source source);
 void wlr_seat_pointer_notify_frame(struct wlr_seat *wlr_seat);
 bool wlr_seat_pointer_has_grab(struct wlr_seat *seat);
 

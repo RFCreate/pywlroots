@@ -16,7 +16,7 @@ from .compositor import Surface
 from .data_device_manager import DataSource, Drag
 from .input_device import ButtonState
 from .keyboard import Keyboard, KeyboardKeyEvent, KeyboardModifiers
-from .pointer import AxisOrientation, AxisSource
+from .pointer import PointerAxis, PointerAxisSource
 
 _weakkeydict: WeakKeyDictionary[ffi.CData, ffi.CData] = WeakKeyDictionary()
 
@@ -214,10 +214,10 @@ class Seat(PtrHasData):
     def pointer_notify_axis(
         self,
         time_msec: int,
-        orientation: AxisOrientation,
+        orientation: PointerAxis,
         value: float,
         value_discrete: int,
-        source: AxisSource,
+        source: PointerAxisSource,
     ) -> None:
         """Notify the seat of an axis event"""
         lib.wlr_seat_pointer_notify_axis(
