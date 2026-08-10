@@ -68,13 +68,15 @@ def check(protocols: list[pathlib.Path]) -> None:
     }
 
     if expected_protocol_files != protocol_files:
-        unexpected_files = list(expected_protocol_files - protocol_files)
-        extra_files = list(protocol_files - expected_protocol_files)
+        missing_files = list(expected_protocol_files - protocol_files)
+        unexpected_files = list(protocol_files - expected_protocol_files)
         raise ValueError(
-            f"Unexpected protocol files: {unexpected_files}, Extra files: {extra_files}"
+            "Error in wlroots/include directory."
+            f"\nMissing files: {missing_files}"
+            f"\nUnexpected files: {unexpected_files}"
         )
 
-    has_error = False
+    errors = []
     for protocol_xml in protocols:
         protocol_header_file = INCLUDE_PATH / header_filename(protocol_xml)
         with protocol_header_file.open() as f:
@@ -88,12 +90,9 @@ def check(protocols: list[pathlib.Path]) -> None:
                 generated_header = f.readlines()
 
         if len(protocol_header) != len(generated_header):
-            print(
-                f"Mismatch line count in {protocol_xml.name}, run:\n"
-                f"> wayland-scanner server-header {protocol_xml} "
-                f"wlroots/include/{protocol_header_file.name}"
+            errors.append(
+                f"Mismatch line count in wlroots/include/{generated_file.name}"
             )
-            has_error = True
             continue
 
         for i, (generated_line, line) in enumerate(
@@ -103,14 +102,13 @@ def check(protocols: list[pathlib.Path]) -> None:
                 continue
 
             if generated_line != line:
-                print(f"Mismatch in {protocol_xml.name} in line {i}")
-                print("- New:", generated_line.strip("\n"))
-                print("- Old:", line.strip("\n"))
-                has_error = True
+                errors.append(f"Mismatch {protocol_xml.name} in line {i + 1}")
+                errors.append(f"- New: {generated_line.strip()}")
+                errors.append(f"- Old: {line.strip()}")
                 continue
 
-    if has_error:
-        raise ValueError("Protocol header check failed")
+    if errors:
+        raise ValueError("Protocol header check failed:\n" + "\n".join(errors))
 
 
 def generate(protocols: list[pathlib.Path]) -> None:
