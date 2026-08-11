@@ -1361,9 +1361,6 @@ struct wlr_scene_node *wlr_scene_node_at(struct wlr_scene_node *node,
 
 struct wlr_scene *wlr_scene_create(void);
 
-void wlr_scene_set_presentation(struct wlr_scene *scene,
-    struct wlr_presentation *presentation);
-
 struct wlr_scene_tree *wlr_scene_tree_create(struct wlr_scene_tree *parent);
 
 struct wlr_scene_buffer *wlr_scene_buffer_from_node(struct wlr_scene_node *node);

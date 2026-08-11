@@ -20,7 +20,6 @@ if TYPE_CHECKING:
     from wlroots.wlr_types import Buffer, Output, OutputLayout
     from wlroots.wlr_types.data_device_manager import DragIcon
     from wlroots.wlr_types.layer_shell_v1 import LayerSurfaceV1
-    from wlroots.wlr_types.presentation_time import Presentation
     from wlroots.wlr_types.xdg_shell import XdgSurface
 
 
@@ -49,13 +48,6 @@ class Scene(Ptr):
         if ptr == ffi.NULL:
             return None
         return SceneOutputLayout(ptr)
-
-    def set_presentation(self, presentation: Presentation) -> None:
-        """
-        Handle presentation feedback for all surfaces in the scene, assuming that scene
-        outputs and the scene rendering functions are used.
-        """
-        lib.wlr_scene_set_presentation(self._ptr, presentation._ptr)
 
     def get_scene_output(self, output: Output) -> SceneOutput:
         """Get a scene-graph output from a wlr_output."""
