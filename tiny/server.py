@@ -204,7 +204,7 @@ class TinywlServer:
         elif self.resize_edges & Edges.RIGHT:
             new_right = max(border_x, new_left + 1)
 
-        geo_box = self.grabbed_view.xdg_surface.get_geometry()
+        geo_box = self.grabbed_view.xdg_surface.geometry
         self.grabbed_view.x = new_left - geo_box.x
         self.grabbed_view.y = new_top - geo_box.y
 

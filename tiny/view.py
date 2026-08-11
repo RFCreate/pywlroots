@@ -91,7 +91,7 @@ class View:
             self.tinywl_server.grab_x = self.tinywl_server._cursor.x - self.x
             self.tinywl_server.grab_y = self.tinywl_server._cursor.y - self.y
         elif cursor_mode == CursorMode.RESIZE:
-            box = self.xdg_surface.get_geometry()
+            box = self.xdg_surface.geometry
 
             border_x = self.x + box.x + (box.width if edges & Edges.RIGHT else 0)
             border_y = self.y + box.y + (box.height if edges & Edges.BOTTOM else 0)

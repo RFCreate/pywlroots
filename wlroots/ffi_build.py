@@ -2078,6 +2078,8 @@ struct wlr_xdg_surface {
     bool initialized;
     bool initial_commit;
 
+    struct wlr_box geometry;
+
     struct {
         struct wl_signal destroy;
         struct wl_signal ping_timeout;
@@ -2153,9 +2155,6 @@ struct wlr_surface *wlr_xdg_surface_surface_at(
 
 struct wlr_xdg_surface *wlr_xdg_surface_try_from_wlr_surface(
     struct wlr_surface *surface);
-
-void wlr_xdg_surface_get_geometry(struct wlr_xdg_surface *surface,
-    struct wlr_box *box);
 
 void wlr_xdg_surface_for_each_surface(struct wlr_xdg_surface *surface,
     wlr_surface_iterator_func_t iterator, void *user_data);
