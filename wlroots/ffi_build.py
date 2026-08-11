@@ -1234,7 +1234,7 @@ struct wlr_presentation {
     ...;
 };
 struct wlr_presentation *wlr_presentation_create(struct wl_display *display,
-    struct wlr_backend *backend);
+    struct wlr_backend *backend, uint32_t version);
 """
 
 # wlr/types/wlr_primary_selection.h
