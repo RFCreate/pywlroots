@@ -609,12 +609,6 @@ void wlr_idle_notifier_v1_notify_activity(struct wlr_idle_notifier_v1 *notifier,
 
 # wlr/types/wlr_input_device.h
 CDEF += """
-enum wlr_button_state {
-    WLR_BUTTON_RELEASED,
-    WLR_BUTTON_PRESSED,
-    ...
-};
-
 enum wlr_input_device_type {
     WLR_INPUT_DEVICE_KEYBOARD,
     WLR_INPUT_DEVICE_POINTER,
@@ -1009,11 +1003,16 @@ struct wlr_pointer_motion_absolute_event {
     ...;
 };
 
+enum wl_pointer_button_state {
+    WL_POINTER_BUTTON_STATE_RELEASED = 0,
+    WL_POINTER_BUTTON_STATE_PRESSED = 1,
+};
+
 struct wlr_pointer_button_event {
     struct wlr_pointer *pointer;
     uint32_t time_msec;
     uint32_t button;
-    enum wlr_button_state state;
+    enum wl_pointer_button_state state;
     ...;
 };
 
@@ -1590,7 +1589,7 @@ void wlr_seat_pointer_notify_enter(struct wlr_seat *wlr_seat,
 void wlr_seat_pointer_notify_motion(struct wlr_seat *wlr_seat,
     uint32_t time_msec, double sx, double sy);
 uint32_t wlr_seat_pointer_notify_button(struct wlr_seat *wlr_seat,
-    uint32_t time_msec, uint32_t button, enum wlr_button_state state);
+    uint32_t time_msec, uint32_t button, enum wl_pointer_button_state state);
 void wlr_seat_pointer_notify_axis(struct wlr_seat *wlr_seat, uint32_t time_msec,
     enum wl_pointer_axis orientation, double value,
     int32_t value_discrete, enum wl_pointer_axis_source source,

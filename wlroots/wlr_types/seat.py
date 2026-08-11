@@ -11,10 +11,10 @@ from pywayland.server import Display, Signal
 from pywayland.utils import wl_list_for_each
 
 from wlroots import Ptr, PtrHasData, ffi, instance_or_none, lib, ptr_or_null
+from wlroots.wlr_types.pointer import PointerButtonState
 
 from .compositor import Surface
 from .data_device_manager import DataSource, Drag
-from .input_device import ButtonState
 from .keyboard import Keyboard, KeyboardKeyEvent, KeyboardModifiers
 from .pointer import PointerAxis, PointerAxisRelativeDirection, PointerAxisSource
 
@@ -205,7 +205,7 @@ class Seat(PtrHasData):
         lib.wlr_seat_pointer_notify_motion(self._ptr, time_msec, surface_x, surface_y)
 
     def pointer_notify_button(
-        self, time_msec: int, button: int, button_state: ButtonState
+        self, time_msec: int, button: int, button_state: PointerButtonState
     ) -> int:
         """Notify the seat that a button has been pressed
 

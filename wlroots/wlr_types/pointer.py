@@ -8,9 +8,15 @@ from weakref import WeakKeyDictionary
 
 from wlroots import Ptr, PtrHasData, ffi, lib, str_or_none
 
-from .input_device import ButtonState, InputDevice
+from .input_device import InputDevice
 
 _weakkeydict: WeakKeyDictionary[ffi.CData, ffi.CData] = WeakKeyDictionary()
+
+
+@enum.unique
+class PointerButtonState(enum.IntEnum):
+    RELEASED = lib.WL_POINTER_BUTTON_STATE_RELEASED
+    PRESSED = lib.WL_POINTER_BUTTON_STATE_PRESSED
 
 
 @enum.unique
@@ -110,8 +116,8 @@ class PointerButtonEvent(_PointerEvent):
         return self._ptr.button
 
     @property
-    def button_state(self) -> ButtonState:
-        return ButtonState(self._ptr.state)
+    def button_state(self) -> PointerButtonState:
+        return PointerButtonState(self._ptr.state)
 
 
 class PointerAxisEvent(_PointerEvent):

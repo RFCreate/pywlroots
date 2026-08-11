@@ -3,19 +3,10 @@
 from __future__ import annotations
 
 import enum
-from weakref import WeakKeyDictionary
 
 from pywayland.server import Signal
 
 from wlroots import PtrHasData, ffi, lib
-
-_weakkeydict: WeakKeyDictionary[ffi.CData, ffi.CData] = WeakKeyDictionary()
-
-
-@enum.unique
-class ButtonState(enum.IntEnum):
-    RELEASED = lib.WLR_BUTTON_RELEASED
-    PRESSED = lib.WLR_BUTTON_PRESSED
 
 
 @enum.unique

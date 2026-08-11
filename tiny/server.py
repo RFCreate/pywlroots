@@ -38,8 +38,9 @@ from wlroots.wlr_types import (
     idle_notify_v1,
 )
 from wlroots.wlr_types.cursor import WarpMode
-from wlroots.wlr_types.input_device import ButtonState, InputDeviceType
+from wlroots.wlr_types.input_device import InputDeviceType
 from wlroots.wlr_types.keyboard import KeyboardModifier
+from wlroots.wlr_types.pointer import PointerButtonState
 from wlroots.wlr_types.xdg_shell import XdgSurface, XdgSurfaceRole
 
 from .cursor_mode import CursorMode
@@ -470,7 +471,7 @@ class TinywlServer:
         )
 
         view, surface, _, _ = self.view_at(self._cursor.x, self._cursor.y)
-        if event.button_state == ButtonState.RELEASED:
+        if event.button_state == PointerButtonState.RELEASED:
             # exit interactive move/resize
             self.cursor_mode = CursorMode.PASSTHROUGH
         elif view is not None:
