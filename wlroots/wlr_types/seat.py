@@ -471,8 +471,8 @@ class Seat(PtrHasData):
         """
         lib.wlr_seat_start_pointer_drag(self._ptr, drag._ptr, serial)
 
-    def surface_accepts_touch(self, surface: Surface) -> bool:
-        return lib.wlr_surface_accepts_touch(self._ptr, surface._ptr)
+    def surface_accepts_touch(self, surface: Surface, seat: Seat) -> bool:
+        return lib.wlr_surface_accepts_touch(surface._ptr, seat._ptr)
 
     def __enter__(self) -> Seat:
         """Context manager to clean up the seat"""

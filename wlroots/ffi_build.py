@@ -1647,7 +1647,7 @@ bool wlr_seat_keyboard_has_grab(struct wlr_seat *seat);
 bool wlr_seat_validate_pointer_grab_serial(struct wlr_seat *seat,
     struct wlr_surface *origin, uint32_t serial);
 
-bool wlr_surface_accepts_touch(struct wlr_seat *wlr_seat, struct wlr_surface *surface);
+bool wlr_surface_accepts_touch(struct wlr_surface *surface, struct wlr_seat *wlr_seat);
 """
 
 # wlr/types/wlr_server_decoration.h
