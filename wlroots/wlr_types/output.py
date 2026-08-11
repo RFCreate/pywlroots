@@ -7,7 +7,7 @@ from types import TracebackType
 from typing import TYPE_CHECKING, NamedTuple
 
 from pywayland.protocol.wayland import WlOutput
-from pywayland.server import Signal
+from pywayland.server import Display, Signal
 from pywayland.utils import wl_list_for_each
 
 from wlroots import Ptr, PtrHasData, ffi, lib, ptr_or_null, str_or_none
@@ -149,9 +149,9 @@ class Output(PtrHasData):
             self._ptr, custom_mode.width, custom_mode.height, custom_mode.refresh
         )
 
-    def create_global(self) -> None:
+    def create_global(self, display: Display) -> None:
         """Create the global corresponding to the output"""
-        lib.wlr_output_create_global(self._ptr)
+        lib.wlr_output_create_global(self._ptr, display._ptr)
 
     def __enter__(self) -> Output:
         """Start rendering frame"""

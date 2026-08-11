@@ -802,7 +802,7 @@ struct wlr_output_event_request_state {
 };
 
 void wlr_output_enable(struct wlr_output *output, bool enable);
-void wlr_output_create_global(struct wlr_output *output);
+void wlr_output_create_global(struct wlr_output *output, struct wl_display *display);
 
 bool wlr_output_init_render(struct wlr_output *output,
     struct wlr_allocator *allocator, struct wlr_renderer *renderer);
@@ -871,7 +871,7 @@ struct wlr_output_layout {
     } events;
     ...;
 };
-struct wlr_output_layout *wlr_output_layout_create(void);
+struct wlr_output_layout *wlr_output_layout_create(struct wl_display *display);
 void wlr_output_layout_destroy(struct wlr_output_layout *layout);
 
 void wlr_output_layout_output_coords(struct wlr_output_layout *layout,

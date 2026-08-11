@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from types import TracebackType
 
-from pywayland.server import Signal
+from pywayland.server import Display, Signal
 
 from wlroots import Ptr, ffi, lib
 from wlroots.util.box import Box
@@ -13,14 +13,14 @@ from .output import Output
 
 
 class OutputLayout(Ptr):
-    def __init__(self) -> None:
+    def __init__(self, display: Display) -> None:
         """Creates an output layout to work with a layout of screens
 
         Creates a output layout, which can be used to describing outputs in
         physical space relative to one another, and perform various useful
         operations on that state.
         """
-        ptr = lib.wlr_output_layout_create()
+        ptr = lib.wlr_output_layout_create(display._ptr)
         self._ptr = ffi.gc(ptr, lib.wlr_output_layout_destroy)
 
         self.add_event = Signal(ptr=ffi.addressof(ptr.events.add))
