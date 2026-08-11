@@ -27,6 +27,12 @@ class PointerAxis(enum.IntEnum):
     HORIZONTAL = lib.WL_POINTER_AXIS_HORIZONTAL_SCROLL
 
 
+@enum.unique
+class PointerAxisRelativeDirection(enum.IntEnum):
+    IDENTICAL = lib.WL_POINTER_AXIS_RELATIVE_DIRECTION_IDENTICAL
+    INVERTED = lib.WL_POINTER_AXIS_RELATIVE_DIRECTION_INVERTED
+
+
 class Pointer(PtrHasData):
     def __init__(self, ptr: ffi.CData) -> None:
         self._ptr = ptr
@@ -120,6 +126,10 @@ class PointerAxisEvent(_PointerEvent):
     @property
     def orientation(self) -> PointerAxis:
         return PointerAxis(self._ptr.orientation)
+
+    @property
+    def relative_direction(self) -> PointerAxisRelativeDirection:
+        return PointerAxisRelativeDirection(self._ptr.relative_direction)
 
     @property
     def delta(self) -> float:

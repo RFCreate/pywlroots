@@ -483,6 +483,7 @@ class TinywlServer:
             event.delta,
             event.delta_discrete,
             event.source,
+            event.relative_direction,
         )
 
     def server_cursor_frame(self, listener: Listener, data: Any) -> None:

@@ -1031,11 +1031,18 @@ enum wl_pointer_axis {
     ...
 };
 
+enum wl_pointer_axis_relative_direction {
+    WL_POINTER_AXIS_RELATIVE_DIRECTION_IDENTICAL = 0,
+    WL_POINTER_AXIS_RELATIVE_DIRECTION_INVERTED = 1,
+    ...
+};
+
 struct wlr_pointer_axis_event {
     struct wlr_pointer *pointer;
     uint32_t time_msec;
     enum wl_pointer_axis_source source;
     enum wl_pointer_axis orientation;
+    enum wl_pointer_axis_relative_direction relative_direction;
     double delta;
     int32_t delta_discrete;
     ...;
@@ -1586,7 +1593,8 @@ uint32_t wlr_seat_pointer_notify_button(struct wlr_seat *wlr_seat,
     uint32_t time_msec, uint32_t button, enum wlr_button_state state);
 void wlr_seat_pointer_notify_axis(struct wlr_seat *wlr_seat, uint32_t time_msec,
     enum wl_pointer_axis orientation, double value,
-    int32_t value_discrete, enum wl_pointer_axis_source source);
+    int32_t value_discrete, enum wl_pointer_axis_source source,
+    enum wl_pointer_axis_relative_direction relative_direction);
 void wlr_seat_pointer_notify_frame(struct wlr_seat *wlr_seat);
 bool wlr_seat_pointer_has_grab(struct wlr_seat *seat);
 
