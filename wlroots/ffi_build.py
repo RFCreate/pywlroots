@@ -2524,8 +2524,7 @@ if has_xwayland():
         struct wlr_compositor *compositor, bool lazy);
     void wlr_xwayland_destroy(struct wlr_xwayland *wlr_xwayland);
     void wlr_xwayland_set_cursor(struct wlr_xwayland *wlr_xwayland,
-        uint8_t *pixels, uint32_t stride, uint32_t width, uint32_t height,
-        int32_t hotspot_x, int32_t hotspot_y);
+        struct wlr_buffer *buffer, int32_t hotspot_x, int32_t hotspot_y);
     void wlr_xwayland_surface_activate(struct wlr_xwayland_surface *surface,
         bool activated);
     void wlr_xwayland_surface_restack(struct wlr_xwayland_surface *surface,
@@ -2536,7 +2535,7 @@ if has_xwayland():
     void wlr_xwayland_surface_set_minimized(struct wlr_xwayland_surface *surface,
         bool minimized);
     void wlr_xwayland_surface_set_maximized(struct wlr_xwayland_surface *surface,
-        bool maximized);
+        bool maximized_horz, bool maximized_vert);
     void wlr_xwayland_surface_set_fullscreen(struct wlr_xwayland_surface *surface,
         bool fullscreen);
     void wlr_xwayland_set_seat(struct wlr_xwayland *xwayland,
@@ -2544,9 +2543,9 @@ if has_xwayland():
     struct wlr_xwayland_surface *wlr_xwayland_surface_try_from_wlr_surface(
         struct wlr_surface *surface);
     void wlr_xwayland_surface_ping(struct wlr_xwayland_surface *surface);
-    bool wlr_xwayland_or_surface_wants_focus(
+    bool wlr_xwayland_surface_override_redirect_wants_focus(
         const struct wlr_xwayland_surface *xsurface);
-    enum wlr_xwayland_icccm_input_model wlr_xwayland_icccm_input_model(
+    enum wlr_xwayland_icccm_input_model wlr_xwayland_surface_icccm_input_model(
         const struct wlr_xwayland_surface *xsurface);
 
     typedef struct xcb_intern_atom_cookie_t {

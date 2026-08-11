@@ -8,6 +8,7 @@ from typing import TYPE_CHECKING
 from pywayland.server import Signal
 
 from wlroots import Ptr, PtrHasData, ffi, lib, str_or_none
+from wlroots.wlr_types.buffer import Buffer
 from wlroots.wlr_types.compositor import Surface as WlrSurface
 
 if TYPE_CHECKING:
@@ -110,18 +111,8 @@ class XWayland(PtrHasData):
     def set_seat(self, seat: Seat) -> None:
         lib.wlr_xwayland_set_seat(self._ptr, seat._ptr)
 
-    def set_cursor(
-        self,
-        pixels: list[int],
-        stride: int,
-        width: int,
-        height: int,
-        hotspot_x: int,
-        hotspot_y: int,
-    ) -> None:
-        lib.wlr_xwayland_set_cursor(
-            self._ptr, pixels, stride, width, height, hotspot_x, hotspot_y
-        )
+    def set_cursor(self, buffer: Buffer, hotspot_x: int, hotspot_y: int) -> None:
+        lib.wlr_xwayland_set_cursor(self._ptr, buffer, hotspot_x, hotspot_y)
 
     def get_atom(self, name: str) -> int:
         """Helper method to fetch an atom by name."""
@@ -227,8 +218,10 @@ class Surface(PtrHasData):
     def set_minimized(self, minimized: bool) -> None:
         lib.wlr_xwayland_surface_set_minimized(self._ptr, minimized)
 
-    def set_maximized(self, maximized: bool) -> None:
-        lib.wlr_xwayland_surface_set_maximized(self._ptr, maximized)
+    def set_maximized(self, maximized_horz: bool, maximized_vert: bool) -> None:
+        lib.wlr_xwayland_surface_set_maximized(
+            self._ptr, maximized_horz, maximized_vert
+        )
 
     def set_fullscreen(self, fullscreen: bool) -> None:
         lib.wlr_xwayland_surface_set_fullscreen(self._ptr, fullscreen)
@@ -243,11 +236,11 @@ class Surface(PtrHasData):
     def ping(self) -> None:
         lib.wlr_xwayland_surface_ping(self._ptr)
 
-    def or_surface_wants_focus(self) -> bool:
-        return lib.wlr_xwayland_or_surface_wants_focus(self._ptr)
+    def surface_override_redirect_wants_focus(self) -> bool:
+        return lib.wlr_xwayland_surface_override_redirect_wants_focus(self._ptr)
 
-    def icccm_input_model(self) -> int:
-        return lib.wlr_xwayland_icccm_input_model(self._ptr)
+    def surface_icccm_input_model(self) -> int:
+        return lib.wlr_xwayland_surface_icccm_input_model(self._ptr)
 
     @property
     def surface(self) -> WlrSurface | None:
