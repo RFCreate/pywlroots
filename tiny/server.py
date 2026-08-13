@@ -371,8 +371,8 @@ class TinywlServer:
         if mode := output.preferred_mode():
             state.set_mode(mode)
 
-        output.commit(state)
-        state.finish()
+        output.commit_state(state)
+        state.state_finish()
 
         self.outputs.append(output)
         l_output = self._output_layout.add_auto(output)
@@ -399,7 +399,7 @@ class TinywlServer:
         self, listener: Listener, request: OutputEventRequestState
     ) -> None:
         output = self.outputs[0]
-        output.commit(request.state)
+        output.commit_state(request.state)
 
     # #############################################################
     # input handling callbacks

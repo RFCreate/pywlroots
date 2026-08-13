@@ -3,7 +3,6 @@
 
 from __future__ import annotations
 
-from types import TracebackType
 from typing import TYPE_CHECKING, NamedTuple
 
 from pywayland.protocol.wayland import WlOutput
@@ -11,7 +10,6 @@ from pywayland.server import Display, Signal
 from pywayland.utils import wl_list_for_each
 
 from wlroots import Ptr, PtrHasData, ffi, lib, ptr_or_null, str_or_none
-from wlroots.util.region import PixmanRegion32
 
 if TYPE_CHECKING:
     from collections.abc import Iterator
@@ -30,10 +28,8 @@ class Output(PtrHasData):
         The `frame` event will be emitted when it is a good time for the
         compositor to submit a new frame.
 
-        To render a new frame, compositors should call
-        `wlr_output_attach_render`, render and call `wlr_output_commit`. No
-        rendering should happen outside a `frame` event handler or before
-        `wlr_output_attach_render`.
+        To render a new frame compositors should call `begin_render_pass`,
+        perform rendering on that render pass, and finally call `commit_state`.
 
         :param ptr:
             The wlr_output cdata pointer
@@ -114,13 +110,6 @@ class Output(PtrHasData):
     def transform(self) -> WlOutput.transform:
         return WlOutput.transform(self._ptr.transform)
 
-    def enable(self, *, enable: bool = True) -> None:
-        """Enables or disables the output
-
-        A disabled output is turned off and doesn't emit `frame` events.
-        """
-        lib.wlr_output_enable(self._ptr, enable)
-
     def preferred_mode(self) -> OutputMode | None:
         """Returns the preferred mode for this output
 
@@ -132,23 +121,6 @@ class Output(PtrHasData):
 
         return OutputMode(output_mode_ptr)
 
-    def set_mode(self, mode: OutputMode | None) -> None:
-        """Sets the output mode
-
-        The output needs to be enabled.
-        """
-        lib.wlr_output_set_mode(self._ptr, ptr_or_null(mode))
-
-    def set_custom_mode(self, custom_mode: CustomMode) -> None:
-        """
-        Sets a custom mode on the output. If modes are available, they are preferred.
-        Setting `refresh` to zero lets the backend pick a preferred value. The
-        output needs to be enabled.
-        """
-        lib.wlr_output_set_custom_mode(
-            self._ptr, custom_mode.width, custom_mode.height, custom_mode.refresh
-        )
-
     def create_global(self, display: Display) -> None:
         """Create the global corresponding to the output"""
         lib.wlr_output_create_global(self._ptr, display._ptr)
@@ -157,56 +129,33 @@ class Output(PtrHasData):
         """Start rendering frame"""
         return self
 
-    def __exit__(
-        self,
-        exc_type: type[BaseException] | None,
-        exc_value: BaseException | None,
-        traceback: TracebackType | None,
-    ) -> None:
-        """Stop rendering frame, commit when exiting normally, otherwise rollback"""
-        if exc_type is None:
-            if not self.commit():
-                raise RuntimeError("Unable to commit output")
-        else:
-            self.rollback()
-
     def init_render(self, allocator: Allocator, renderer: Renderer) -> None:
-        """Initialize the output's rendering subsystem with the provided allocator and renderer.
+        """
+        Initialize the output's rendering subsystem with the provided allocator and
+        renderer. After initialization, this function may invoked again to reinitialize
+        the allocator and renderer to different values.
 
-        Can only be called once.
+        Call this function prior to any call to `begin_render_pass`,
+        `commit_state` or `cursor_create`.
 
-        Call this function prior to any call to `attach_render`, `commit`, or
-        `cursor_create`. The buffer capabilities of the provided must match the
-        capabilities of the output's backend.  Raises error otherwise.
+        The buffer capabilities of the provided must match the capabilities of the
+        output's backend. Returns false otherwise.
         """
         if not lib.wlr_output_init_render(self._ptr, allocator._ptr, renderer._ptr):
             raise RuntimeError(
                 "Output capabilities must match the capabilities of the output's backend."
             )
 
-    def attach_render(self) -> None:
-        """Attach the renderer's buffer to the output
-
-        Compositors must call this function before rendering. After they are
-        done rendering, they should call `.commit()` to submit the new frame.
+    def commit_state(self, output_state: OutputState) -> bool:
         """
-        if not lib.wlr_output_attach_render(self._ptr, ffi.NULL):
-            raise RuntimeError("Unable to attach render")
+        Attempts to apply the state to this output. This function may fail for any
+        reason and return false. If failed, none of the state would have been applied,
+        this function is atomic. If the commit succeeded, true is returned.
 
-    def commit(self, output_state: OutputState | None = None) -> bool:
-        """Commit the pending output state
-
-        If `.attach_render` has been called, the pending frame will be
-        submitted for display.
+        Note: `state_finish` would typically be called after the state
+        has been committed.
         """
-        if output_state is None:
-            return lib.wlr_output_commit(self._ptr)
-        else:
-            return lib.wlr_output_commit_state(self._ptr, output_state._ptr)
-
-    def rollback(self) -> None:
-        """Discard the pending output state"""
-        lib.wlr_output_rollback(self._ptr)
+        return lib.wlr_output_commit_state(self._ptr, output_state._ptr)
 
     def effective_resolution(self) -> tuple[int, int]:
         """Computes the transformed and scaled output resolution"""
@@ -226,85 +175,14 @@ class Output(PtrHasData):
         height = height_ptr[0]
         return width, height
 
-    def render_software_cursors(self, damage: PixmanRegion32 | None = None) -> None:
-        """Renders software cursors
-
-        This is a utility function that can be called when compositors render.
+    def test_state(self, output_state: OutputState) -> bool:
         """
-        lib.wlr_output_render_software_cursors(self._ptr, ptr_or_null(damage))
-
-    @staticmethod
-    def transform_invert(transform: WlOutput.transform) -> WlOutput.transform:
-        """Returns the transform that, when composed with transform gives transform.normal"""
-        return WlOutput.transform(lib.wlr_output_transform_invert(transform))
-
-    @staticmethod
-    def transform_compose(
-        tr_a: WlOutput.transform, tr_b: WlOutput.transform
-    ) -> WlOutput.transform:
+        Test whether this output state would be accepted by the backend. If this
+        function returns true, `commit_state` will only fail due to a
+        runtime error. This function does not change the current state of the
+        output.
         """
-        Returns a transform that, when applied, has the same effect as applying
-        sequentially `tr_a` and `tr_b`.
-        """
-        return WlOutput.transform(lib.wlr_output_transform_compose(tr_a, tr_b))
-
-    def set_damage(self, damage: PixmanRegion32) -> None:
-        """
-        Set the damage region for the frame to be submitted. This is the region of
-        the screen that has changed since the last frame.
-
-        Compositors implementing damage tracking should call this function with the
-        damaged region in output-buffer-local coordinates.
-
-        This region is not to be confused with the renderer's buffer damage, ie. the
-        region compositors need to repaint. Compositors usually need to repaint more
-        than what changed since last frame since multiple render buffers are used.
-        """
-        lib.wlr_output_set_damage(self._ptr, damage._ptr)
-
-    def set_transform(self, transform: WlOutput.transform) -> None:
-        """
-        Sets a transform for the output.
-
-        Transform is double-buffered state, see `wlr_output_commit`.
-        """
-        lib.wlr_output_set_transform(self._ptr, transform)
-
-    def set_scale(self, scale: float) -> None:
-        """
-        Sets a scale for the output.
-
-        Scale is double-buffered state, see `wlr_output_commit`.
-        """
-        lib.wlr_output_set_scale(self._ptr, scale)
-
-    def test(self, output_state: OutputState | None = None) -> bool:
-        """
-        Test whether the pending output state would be accepted by the backend. If
-        this function returns true, `wlr_output_commit` can only fail due to a
-        runtime error.
-
-        This function doesn't mutate the pending state.
-        """
-        if output_state is None:
-            return lib.wlr_output_test(self._ptr)
-        else:
-            return lib.wlr_output_test_state(self._ptr, output_state._ptr)
-
-    def enable_adaptive_sync(self, *, enable: bool = True) -> None:
-        """
-        Enables or disables adaptive sync (ie. variable refresh rate) on this
-        output. On some backends, this is just a hint and may be ignored.
-        Compositors can inspect `wlr_output.adaptive_sync_status` to query the
-        effective status. Backends that don't support adaptive sync will reject
-        the output commit.
-
-        When enabled, compositors can submit frames a little bit later than the
-        deadline without dropping a frame.
-
-        Adaptive sync is double-buffered state, see commit().
-        """
-        lib.wlr_output_enable_adaptive_sync(self._ptr, enable)
+        return lib.wlr_output_test_state(self._ptr, output_state._ptr)
 
     @property
     def is_headless(self) -> bool:
@@ -412,7 +290,7 @@ class OutputState(Ptr):
             self._ptr, mode.width, mode.height, mode.refresh
         )
 
-    def finish(self) -> None:
+    def state_finish(self) -> None:
         lib.wlr_output_state_finish(self._ptr)
 
 
