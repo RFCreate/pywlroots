@@ -137,7 +137,7 @@ class XdgSurface(PtrHasData):
 
     @property
     def geometry(self) -> Box:
-        return Box(self._ptr.geometry)
+        return Box(ptr=self._ptr.geometry)
 
     def set_size(self, width: int, height: int) -> int:
         return lib.wlr_xdg_toplevel_set_size(self._ptr.toplevel, width, height)
@@ -401,7 +401,7 @@ class XdgPopupState(Ptr):
         Position of the popup relative to the upper left corner of the window geometry
         of the parent surface.
         """
-        return Box(self._ptr.geometry)
+        return Box(ptr=self._ptr.geometry)
 
     @property
     def reactive(self) -> bool:
