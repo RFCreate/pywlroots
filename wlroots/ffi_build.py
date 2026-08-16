@@ -16,6 +16,9 @@ assert INCLUDE_PATH.is_dir(), (
     "Missing include directory. Run `python protocol_headers.py --generate` first."
 )
 
+WLROOTS_PATH = "/usr/include/wlroots-0.20"
+INCLUDE_DIRS = [WLROOTS_PATH, "/usr/include/pixman-1", INCLUDE_PATH.as_posix()]
+
 
 def load_version() -> str:
     """Load the current pywlroots version"""
@@ -38,7 +41,7 @@ def load_wlroots_version() -> str | None:
 
     if not os.getenv("PYTHON_CROSSENV"):
         try:
-            lib: Any = ffi.verify("#include <wlr/version.h>")
+            lib: Any = ffi.verify("#include <wlr/version.h>", include_dirs=INCLUDE_DIRS)
         except (PermissionError, OSError, VerificationError):
             lib = importlib.import_module("wlroots").lib
         return (
@@ -87,7 +90,7 @@ def has_xwayland() -> bool:
         FFI().verify(
             "#include <wlr/xwayland.h>",
             define_macros=[("WLR_USE_UNSTABLE", 1)],
-            include_dirs=["/usr/include/pixman-1", INCLUDE_PATH.as_posix()],
+            include_dirs=INCLUDE_DIRS,
         )
         has_xwayland = True
     except VerificationError:
@@ -2486,7 +2489,7 @@ ffi_builder.set_source(
     SOURCE,
     libraries=["wlroots-0.20"],
     define_macros=[("WLR_USE_UNSTABLE", None)],
-    include_dirs=["/usr/include/pixman-1", "/usr/include/wlroots-0.20", INCLUDE_PATH],
+    include_dirs=INCLUDE_DIRS,
 )
 ffi_builder.include(pywayland_ffi)
 ffi_builder.include(xkb_ffi)
