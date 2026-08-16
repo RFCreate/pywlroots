@@ -69,6 +69,7 @@ class Server(PtrHasData):
 
         self._ptr = ffi.gc(ptr, lib.wlr_xwayland_server_destroy)
 
+        self.start_event = Signal(ptr=ffi.addressof(self._ptr.events.start))
         self.ready_event = Signal(ptr=ffi.addressof(self._ptr.events.ready))
         self.destroy_event = Signal(ptr=ffi.addressof(self._ptr.events.destroy))
 
@@ -90,6 +91,7 @@ class XWayland(PtrHasData):
 
         self._ptr = ffi.gc(ptr, lib.wlr_xwayland_destroy)
 
+        self.destroy_event = Signal(ptr=ffi.addressof(self._ptr.events.destroy))
         self.ready_event = Signal(ptr=ffi.addressof(self._ptr.events.ready))
         self.new_surface_event = Signal(
             ptr=ffi.addressof(self._ptr.events.new_surface),
@@ -171,6 +173,30 @@ class Surface(PtrHasData):
         self.request_activate_event = Signal(
             ptr=ffi.addressof(self._ptr.events.request_activate)
         )
+        self.request_close_event = Signal(
+            ptr=ffi.addressof(self._ptr.events.request_close)
+        )
+        self.request_sticky_event = Signal(
+            ptr=ffi.addressof(self._ptr.events.request_sticky)
+        )
+        self.request_shaded_event = Signal(
+            ptr=ffi.addressof(self._ptr.events.request_shaded)
+        )
+        self.request_skip_taskbar_event = Signal(
+            ptr=ffi.addressof(self._ptr.events.request_skip_taskbar)
+        )
+        self.request_skip_pager_event = Signal(
+            ptr=ffi.addressof(self._ptr.events.request_skip_pager)
+        )
+        self.request_above_event = Signal(
+            ptr=ffi.addressof(self._ptr.events.request_above)
+        )
+        self.request_below_event = Signal(
+            ptr=ffi.addressof(self._ptr.events.request_below)
+        )
+        self.request_demands_attention_event = Signal(
+            ptr=ffi.addressof(self._ptr.events.request_demands_attention)
+        )
         self.associate_event = Signal(ptr=ffi.addressof(self._ptr.events.associate))
         self.dissociate_event = Signal(ptr=ffi.addressof(self._ptr.events.dissociate))
         self.set_title_event = Signal(ptr=ffi.addressof(self._ptr.events.set_title))
@@ -184,6 +210,9 @@ class Surface(PtrHasData):
             ptr=ffi.addressof(self._ptr.events.set_window_type)
         )
         self.set_hints_event = Signal(ptr=ffi.addressof(self._ptr.events.set_hints))
+        self.set_size_hints_event = Signal(
+            ptr=ffi.addressof(self._ptr.events.set_size_hints)
+        )
         self.set_decorations_event = Signal(
             ptr=ffi.addressof(self._ptr.events.set_decorations)
         )
@@ -196,6 +225,11 @@ class Surface(PtrHasData):
         self.set_geometry_event = Signal(
             ptr=ffi.addressof(self._ptr.events.set_geometry)
         )
+        self.set_opacity_event = Signal(ptr=ffi.addressof(self._ptr.events.set_opacity))
+        self.set_icon_event = Signal(ptr=ffi.addressof(self._ptr.events.set_icon))
+        self.focus_in_event = Signal(ptr=ffi.addressof(self._ptr.events.focus_in))
+        self.grab_focus_event = Signal(ptr=ffi.addressof(self._ptr.events.grab_focus))
+        self.map_request_event = Signal(ptr=ffi.addressof(self._ptr.events.map_request))
         self.ping_timeout_event = Signal(
             ptr=ffi.addressof(self._ptr.events.ping_timeout)
         )

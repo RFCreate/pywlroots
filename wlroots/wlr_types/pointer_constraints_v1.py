@@ -38,6 +38,7 @@ class PointerConstraintsV1(Ptr):
         """
         self._ptr = lib.wlr_pointer_constraints_v1_create(display._ptr)
 
+        self.destroy_event = Signal(ptr=ffi.addressof(self._ptr.events.destroy))
         self.new_constraint_event = Signal(
             ptr=ffi.addressof(self._ptr.events.new_constraint),
             data_wrapper=PointerConstraintV1,

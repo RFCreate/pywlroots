@@ -144,9 +144,7 @@ bool wlr_session_change_vt(struct wlr_session *session, unsigned vt);
 
 # wlr/render/allocator.h
 CDEF += """
-struct wlr_allocator {
-    ...;
-};
+struct wlr_allocator { ...; };
 
 struct wlr_allocator *wlr_allocator_autocreate(struct wlr_backend *backend,
     struct wlr_renderer *renderer);
@@ -163,12 +161,8 @@ bool wlr_renderer_init_wl_display(struct wlr_renderer *r, struct wl_display *wl_
 
 # wlr/render/drm_format_set.h
 CDEF += """
-struct wlr_drm_format_set {
-    ...;
-};
-struct wlr_drm_format {
-    ...;
-};
+struct wlr_drm_format_set { ...; };
+struct wlr_drm_format { ...; };
 const struct wlr_drm_format *wlr_drm_format_set_get(
     const struct wlr_drm_format_set *set, uint32_t format);
 """
@@ -203,9 +197,7 @@ bool wlr_box_contains_point(const struct wlr_box *box, double x, double y);
 
 # wlr/types/wlr_buffer.h
 CDEF += """
-struct wlr_buffer {
-    ...;
-};
+struct wlr_buffer { ...; };
 
 void wlr_buffer_drop(struct wlr_buffer *buffer);
 
@@ -287,9 +279,7 @@ void wlr_cursor_set_xcursor(struct wlr_cursor *cur,
 
 # wlr/types/wlr_compositor.h
 CDEF += """
-struct wlr_compositor {
-    ...;
-};
+struct wlr_compositor { ...; };
 
 struct wlr_compositor *wlr_compositor_create(struct wl_display *display,
     uint32_t version, struct wlr_renderer *renderer);
@@ -299,16 +289,13 @@ struct wlr_surface_state {
     int width, height;
     ...;
 };
-struct wlr_surface_role {
-    ...;
-};
+struct wlr_surface_role { ...; };
 
 struct wlr_surface {
     struct wlr_surface_state current, pending;
 
     struct {
         struct wl_signal client_commit;
-        struct wl_signal precommit;
         struct wl_signal commit;
         struct wl_signal map;
         struct wl_signal unmap;
@@ -349,25 +336,13 @@ struct wlr_subsurface {
     ...;
 };
 
-struct wlr_subcompositor {
-    ...;
-};
-
+struct wlr_subcompositor { ...; };
 struct wlr_subcompositor *wlr_subcompositor_create(struct wl_display *display);
-"""
-
-# wlr/types/wlr_damage_ring.h
-CDEF += """
-struct wlr_damage_ring {
-    ...;
-};
 """
 
 # wlr/types/wlr_data_control_v1.h
 CDEF += """
-struct wlr_data_control_manager_v1 {
-    ...;
-};
+struct wlr_data_control_manager_v1 { ...; };
 struct wlr_data_control_manager_v1 *wlr_data_control_manager_v1_create(
     struct wl_display *display);
 """
@@ -433,10 +408,6 @@ struct wlr_export_dmabuf_manager_v1 {
     struct {
         struct wl_signal destroy;
     } events;
-    ...;
-};
-
-struct wlr_export_dmabuf_frame_v1 {
     ...;
 };
 
@@ -543,10 +514,7 @@ void wlr_foreign_toplevel_handle_v1_set_parent(
 
 # wlr/types/wlr_fractional_scale_v1.h
 CDEF += """
-struct wlr_fractional_scale_manager_v1 {
-    ...;
-};
-
+struct wlr_fractional_scale_manager_v1 { ...; };
 
 void wlr_fractional_scale_v1_notify_scale(
     struct wlr_surface *surface, double scale);
@@ -596,7 +564,7 @@ struct wlr_idle_inhibit_manager_v1 *wlr_idle_inhibit_v1_create(struct wl_display
 
 # wlr/types/wlr_idle_notify_v1.h
 CDEF += """
-struct wlr_idle_notifier_v1;
+struct wlr_idle_notifier_v1 { ...; };
 
 struct wlr_idle_notifier_v1 *wlr_idle_notifier_v1_create(struct wl_display *display);
 
@@ -713,9 +681,7 @@ void wlr_keyboard_notify_modifiers(struct wlr_keyboard *keyboard,
 # Adapted from /usr/include/pixman-1/pixman.h
 # Used for some wlr_output methods
 CDEF += """
-struct pixman_region32 {
-    ...;
-};
+struct pixman_region32 { ...; };
 
 struct pixman_box32 {
     int32_t x1, y1, x2, y2;
@@ -1104,6 +1070,7 @@ struct wlr_pointer_constraint_v1_state {
     uint32_t committed; // enum wlr_pointer_constraint_v1_state_field
     struct pixman_region32 region;
     struct {
+        bool enabled;
         double x, y;
     } cursor_hint;
     ...;
@@ -1125,6 +1092,7 @@ struct wlr_pointer_constraint_v1 {
 
 struct wlr_pointer_constraints_v1 {
     struct {
+        struct wl_signal destroy;
         struct wl_signal new_constraint;
     } events;
     ...;
@@ -1202,18 +1170,14 @@ void wlr_pointer_gestures_v1_send_hold_end(
 
 # wlr/types/wlr_primary_selection_v1.h
 CDEF += """
-struct wlr_primary_selection_v1_device_manager {
-    ...;
-};
+struct wlr_primary_selection_v1_device_manager { ...; };
 struct wlr_primary_selection_v1_device_manager *
     wlr_primary_selection_v1_device_manager_create(struct wl_display *display);
 """
 
 # wlr/types/wlr_presentation_time.h
 CDEF += """
-struct wlr_presentation {
-    ...;
-};
+struct wlr_presentation { ...; };
 struct wlr_presentation *wlr_presentation_create(struct wl_display *display,
     struct wlr_backend *backend, uint32_t version);
 """
@@ -1302,18 +1266,14 @@ struct wlr_scene_buffer {
     ...;
 };
 
-struct wlr_scene_output {
-    ...;
-};
+struct wlr_scene_output { ...; };
 
 struct wlr_scene_layer_surface_v1 {
     struct wlr_scene_tree *tree;
     ...;
 };
 
-struct wlr_scene_output_state_options {
-    ...;
-};
+struct wlr_scene_output_state_options { ...; };
 
 void wlr_scene_node_destroy(struct wlr_scene_node *node);
 
@@ -1438,15 +1398,9 @@ int clock_gettime(clockid_t clk_id, struct timespec *tp);
 
 #define WLR_POINTER_BUTTONS_CAP 16
 
-struct wlr_seat_touch_grab {
-    ...;
-};
-struct wlr_seat_keyboard_grab {
-    ...;
-};
-struct wlr_seat_pointer_grab {
-    ...;
-};
+struct wlr_seat_touch_grab { ...; };
+struct wlr_seat_keyboard_grab { ...; };
+struct wlr_seat_pointer_grab { ...; };
 
 struct wlr_seat_pointer_state {
     struct wlr_surface *focused_surface;
@@ -1671,13 +1625,9 @@ struct wlr_session_lock_v1 {
     ...;
 };
 
-struct wlr_session_lock_surface_v1_state {
-    ...;
-};
+struct wlr_session_lock_surface_v1_state { ...; };
 
-struct wlr_session_lock_surface_v1_configure {
-    ...;
-};
+struct wlr_session_lock_surface_v1_configure { ...; };
 
 struct wlr_session_lock_surface_v1 {
     struct wlr_output *output;
@@ -1845,9 +1795,7 @@ struct wlr_xcursor *wlr_xcursor_manager_get_xcursor(
 
 # wlr/xcursor.h
 CDEF += """
-struct wlr_xcursor_image {
-    ...;
-};
+struct wlr_xcursor_image { ...; };
 struct wlr_xcursor {
     unsigned int image_count;
     struct wlr_xcursor_image **images;
@@ -1894,13 +1842,9 @@ struct wlr_xdg_decoration_manager_v1 {
     ...;
 };
 
-struct wlr_xdg_toplevel_decoration_v1_configure {
-    ...;
-};
+struct wlr_xdg_toplevel_decoration_v1_configure { ...; };
 
-struct wlr_xdg_toplevel_decoration_v1_state {
-    ...;
-};
+struct wlr_xdg_toplevel_decoration_v1_state { ...; };
 
 struct wlr_xdg_toplevel_decoration_v1 {
     struct wlr_xdg_toplevel *toplevel;
@@ -1938,12 +1882,8 @@ struct wlr_xdg_output_manager_v1 *wlr_xdg_output_manager_v1_create(
 
 # wlr/util/addon.h
 CDEF += """
-struct wlr_addon_set {
-    ...;
-};
-struct wlr_addon {
-    ...;
-};
+struct wlr_addon_set { ...; };
+struct wlr_addon { ...; };
 """
 
 # wlr/types/wlr_xdg_shell.h
@@ -1951,6 +1891,8 @@ CDEF += """
 struct wlr_xdg_shell {
     struct {
         struct wl_signal new_surface;
+        struct wl_signal new_toplevel;
+        struct wl_signal new_popup;
         struct wl_signal destroy;
     } events;
 
@@ -1958,13 +1900,9 @@ struct wlr_xdg_shell {
     ...;
 };
 
-struct wlr_xdg_client {
-    ...;
-};
+struct wlr_xdg_client { ...; };
 
-struct wlr_xdg_positioner_rules {
-    ...;
-};
+struct wlr_xdg_positioner_rules { ...; };
 
 struct wlr_xdg_popup_state {
     struct wlr_box geometry;
@@ -1972,9 +1910,7 @@ struct wlr_xdg_popup_state {
     ...;
 };
 
-struct wlr_xdg_popup_configure {
-    ...;
-};
+struct wlr_xdg_popup_configure { ...; };
 
 struct wlr_xdg_popup {
     struct wlr_xdg_surface *base;
@@ -1982,6 +1918,7 @@ struct wlr_xdg_popup {
     struct wlr_xdg_popup_state current, pending;
 
     struct {
+        struct wl_signal destroy;
         struct wl_signal reposition;
     } events;
     ...;
@@ -1990,13 +1927,9 @@ struct wlr_xdg_popup {
 struct wlr_xdg_shell *wlr_xdg_shell_create(struct wl_display *display,
     uint32_t version);
 
-struct wlr_xdg_toplevel_state {
-    ...;
-};
+struct wlr_xdg_toplevel_state { ...; };
 
-struct wlr_xdg_toplevel_configure {
-    ...;
-};
+struct wlr_xdg_toplevel_configure { ...; };
 
 struct wlr_xdg_toplevel_requested {
     bool maximized, minimized, fullscreen;
@@ -2012,6 +1945,7 @@ struct wlr_xdg_toplevel {
     char *app_id;
 
     struct {
+        struct wl_signal destroy;
         struct wl_signal request_maximize;
         struct wl_signal request_fullscreen;
         struct wl_signal request_minimize;
@@ -2079,9 +2013,7 @@ struct wlr_xdg_surface_configure {
     ...;
 };
 
-struct wlr_xdg_surface_state {
-    ...;
-};
+struct wlr_xdg_surface_state { ...; };
 
 struct wlr_xdg_toplevel_move_event {
     struct wlr_xdg_toplevel *toplevel;
@@ -2205,7 +2137,6 @@ SOURCE = """
 #include <wlr/types/wlr_buffer.h>
 #include <wlr/types/wlr_compositor.h>
 #include <wlr/types/wlr_cursor.h>
-#include <wlr/types/wlr_damage_ring.h>
 #include <wlr/types/wlr_data_control_v1.h>
 #include <wlr/types/wlr_data_device.h>
 #include <wlr/types/wlr_export_dmabuf_v1.h>
@@ -2353,12 +2284,8 @@ if has_xwayland():
 
     CDEF += """
     typedef int... time_t;
-    typedef struct {
-        ...;
-    } xcb_generic_event_t;
-    typedef struct {
-        ...;
-    } xcb_ewmh_wm_strut_partial_t;
+    typedef struct { ...; } xcb_generic_event_t;
+    typedef struct { ...; } xcb_ewmh_wm_strut_partial_t;
     typedef uint32_t xcb_pixmap_t;
     typedef uint32_t xcb_window_t;
     typedef uint32_t xcb_atom_t;
@@ -2383,8 +2310,6 @@ if has_xwayland():
         ...;
     } xcb_size_hints_t;
 
-    struct wlr_xwm;
-    struct wlr_xwayland_cursor;
     struct wlr_xwayland_server_options {
         bool lazy;
         bool enable_wm;
@@ -2396,6 +2321,7 @@ if has_xwayland():
         bool ready;
         time_t server_start;
         struct {
+            struct wl_signal start;
             struct wl_signal ready;
             struct wl_signal destroy;
         } events;
@@ -2405,6 +2331,7 @@ if has_xwayland():
     struct wlr_xwayland {
         const char *display_name;
         struct {
+            struct wl_signal destroy;
             struct wl_signal ready;
             struct wl_signal new_surface;
             struct wl_signal remove_startup_info;
@@ -2457,8 +2384,18 @@ if has_xwayland():
             struct wl_signal request_maximize;
             struct wl_signal request_fullscreen;
             struct wl_signal request_activate;
+            struct wl_signal request_close;
+            struct wl_signal request_sticky;
+            struct wl_signal request_shaded;
+            struct wl_signal request_skip_taskbar;
+            struct wl_signal request_skip_pager;
+            struct wl_signal request_above;
+            struct wl_signal request_below;
+            struct wl_signal request_demands_attention;
+
             struct wl_signal associate;
             struct wl_signal dissociate;
+
             struct wl_signal set_title;
             struct wl_signal set_class;
             struct wl_signal set_role;
@@ -2466,10 +2403,16 @@ if has_xwayland():
             struct wl_signal set_startup_id;
             struct wl_signal set_window_type;
             struct wl_signal set_hints;
+            struct wl_signal set_size_hints;
             struct wl_signal set_decorations;
             struct wl_signal set_strut_partial;
             struct wl_signal set_override_redirect;
             struct wl_signal set_geometry;
+            struct wl_signal set_opacity;
+            struct wl_signal set_icon;
+            struct wl_signal focus_in;
+            struct wl_signal grab_focus;
+            struct wl_signal map_request;
             struct wl_signal ping_timeout;
         } events;
         void *data;
@@ -2523,16 +2466,10 @@ if has_xwayland():
     enum wlr_xwayland_icccm_input_model wlr_xwayland_surface_icccm_input_model(
         const struct wlr_xwayland_surface *xsurface);
 
-    typedef struct xcb_intern_atom_cookie_t {
-        ...;
-    } xcb_intern_atom_cookie_t;
+    typedef struct xcb_intern_atom_cookie_t { ...; } xcb_intern_atom_cookie_t;
     typedef struct xcb_connection_t xcb_connection_t;
-    typedef struct xcb_intern_atom_reply_t {
-        ...;
-    } xcb_intern_atom_reply_t;
-    typedef struct {
-        ...;
-    } xcb_generic_error_t;
+    typedef struct xcb_intern_atom_reply_t { ...; } xcb_intern_atom_reply_t;
+    typedef struct { ...; } xcb_generic_error_t;
 
     int xcb_connection_has_error(xcb_connection_t *c);
     xcb_connection_t *xcb_connect(const char *displayname, int *screenp);

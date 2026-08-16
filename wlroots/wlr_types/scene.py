@@ -375,7 +375,7 @@ class SceneLayerSurfaceV1(Ptr):
 
 class SceneOutputLayout(Ptr):
     def __init__(self, ptr: ffi.CData) -> None:
-        """A `struct wlr_scene_output_layout_scene`"""
+        """A `struct wlr_scene_output_layout`"""
         self._ptr = ptr
 
     def add_output(

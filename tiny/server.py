@@ -147,6 +147,31 @@ class TinywlServer:
         backend.new_input_event.add(Listener(self.server_new_input))
 
     def _terminate_signal_callback(self, sig_num: int, display: Display) -> int:
+        # Remove all listeners
+        self._backend.new_input_event.remove_listeners()
+        self._backend.new_output_event.remove_listeners()
+        self._cursor.motion_event.remove_listeners()
+        self._cursor.motion_absolute_event.remove_listeners()
+        self._cursor.button_event.remove_listeners()
+        self._cursor.axis_event.remove_listeners()
+        self._cursor.frame_event.remove_listeners()
+        self._seat.request_set_cursor_event.remove_listeners()
+        self._seat.request_set_selection_event.remove_listeners()
+        self._xdg_shell.new_surface_event.remove_listeners()
+
+        for output in self.outputs:
+            output.frame_event.remove_listeners()
+            output.request_state_event.remove_listeners()
+        for keyboard in self.keyboards:
+            keyboard.keyboard.modifiers_event.remove_listeners()
+            keyboard.keyboard.key_event.remove_listeners()
+        for view in self.views:
+            view.xdg_surface.destroy_event.remove_listeners()
+            view.xdg_surface.surface.map_event.remove_listeners()
+            view.xdg_surface.surface.unmap_event.remove_listeners()
+            view.xdg_surface.toplevel.request_move_event.remove_listeners()
+            view.xdg_surface.toplevel.request_resize_event.remove_listeners()
+
         logging.info("Terminating event loop.")
         display.terminate()
         return 0

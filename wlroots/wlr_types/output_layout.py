@@ -23,9 +23,9 @@ class OutputLayout(Ptr):
         ptr = lib.wlr_output_layout_create(display._ptr)
         self._ptr = ffi.gc(ptr, lib.wlr_output_layout_destroy)
 
-        self.add_event = Signal(ptr=ffi.addressof(ptr.events.add))
-        self.change_event = Signal(ptr=ffi.addressof(ptr.events.change))
-        self.destroy_event = Signal(ptr=ffi.addressof(ptr.events.destroy))
+        self.add_event = Signal(ptr=ffi.addressof(self._ptr.events.add))
+        self.change_event = Signal(ptr=ffi.addressof(self._ptr.events.change))
+        self.destroy_event = Signal(ptr=ffi.addressof(self._ptr.events.destroy))
 
     def destroy(self) -> None:
         """Destroy the current output layout"""

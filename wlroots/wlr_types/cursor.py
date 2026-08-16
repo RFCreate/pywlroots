@@ -142,6 +142,18 @@ class Cursor(PtrHasData):
         self.touch_frame_event = Signal(
             ptr=ffi.addressof(self._ptr.events.touch_frame),
         )
+        self.tablet_tool_axis_event = Signal(
+            ptr=ffi.addressof(self._ptr.events.tablet_tool_axis),
+        )
+        self.tablet_tool_proximity_event = Signal(
+            ptr=ffi.addressof(self._ptr.events.tablet_tool_proximity),
+        )
+        self.tablet_tool_tip_event = Signal(
+            ptr=ffi.addressof(self._ptr.events.tablet_tool_tip),
+        )
+        self.tablet_tool_button_event = Signal(
+            ptr=ffi.addressof(self._ptr.events.tablet_tool_button),
+        )
 
     @property
     def x(self) -> float:

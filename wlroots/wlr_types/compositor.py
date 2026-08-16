@@ -62,10 +62,6 @@ class Surface(PtrHasData):
         self.client_commit_event = Signal(
             ptr=ffi.addressof(self._ptr.events.client_commit)
         )
-        self.precommit_event = Signal(
-            ptr=ffi.addressof(self._ptr.events.precommit),
-            data_wrapper=SurfaceState,
-        )
         self.commit_event = Signal(ptr=ffi.addressof(self._ptr.events.commit))
         self.map_event = Signal(ptr=ffi.addressof(self._ptr.events.map))
         self.unmap_event = Signal(ptr=ffi.addressof(self._ptr.events.unmap))
