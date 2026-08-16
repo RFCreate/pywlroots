@@ -248,7 +248,7 @@ class XdgToplevel(Ptr):
             ptr=ffi.addressof(self._ptr.events.request_maximize)
         )
         self.request_fullscreen_event = Signal(
-            ptr=ffi.addressof(self._ptr.events.request_fullscreen),
+            ptr=ffi.addressof(self._ptr.events.request_fullscreen)
         )
         self.request_minimize_event = Signal(
             ptr=ffi.addressof(self._ptr.events.request_minimize)

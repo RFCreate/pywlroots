@@ -179,10 +179,7 @@ class TinywlServer:
     def view_at(
         self, layout_x: float, layout_y: float
     ) -> tuple[View | None, Surface | None, float, float]:
-        maybe_node = self._scene.tree.node.node_at(
-            layout_x,
-            layout_y,
-        )
+        maybe_node = self._scene.tree.node.node_at(layout_x, layout_y)
         if maybe_node is None or maybe_node[0].type != SceneNodeType.BUFFER:
             return None, None, 0, 0
 

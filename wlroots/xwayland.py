@@ -94,8 +94,7 @@ class XWayland(PtrHasData):
         self.destroy_event = Signal(ptr=ffi.addressof(self._ptr.events.destroy))
         self.ready_event = Signal(ptr=ffi.addressof(self._ptr.events.ready))
         self.new_surface_event = Signal(
-            ptr=ffi.addressof(self._ptr.events.new_surface),
-            data_wrapper=Surface,
+            ptr=ffi.addressof(self._ptr.events.new_surface), data_wrapper=Surface
         )
         self.remove_startup_info_event = Signal(
             ptr=ffi.addressof(self._ptr.events.remove_startup_info)

@@ -50,9 +50,7 @@ class PointerConstraintV1(Ptr):
         """A `struct wlr_pointer_constraint_v1` instance."""
         self._ptr = ffi.cast("struct wlr_pointer_constraint_v1 *", ptr)
 
-        self.set_region_event = Signal(
-            ptr=ffi.addressof(self._ptr.events.set_region),
-        )
+        self.set_region_event = Signal(ptr=ffi.addressof(self._ptr.events.set_region))
         self.destroy_event = Signal(
             ptr=ffi.addressof(self._ptr.events.destroy),
             data_wrapper=PointerConstraintV1,

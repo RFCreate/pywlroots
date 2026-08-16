@@ -145,10 +145,7 @@ class SceneTree(Ptr):
     @property
     def children(self) -> Iterator[SceneNode]:
         for ptr in wl_list_for_each(
-            "struct wlr_scene_node *",
-            self._ptr.children,
-            "link",
-            ffi=ffi,
+            "struct wlr_scene_node *", self._ptr.children, "link", ffi=ffi
         ):
             yield SceneNode(ptr)
 

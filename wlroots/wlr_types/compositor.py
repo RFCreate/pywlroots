@@ -66,8 +66,7 @@ class Surface(PtrHasData):
         self.map_event = Signal(ptr=ffi.addressof(self._ptr.events.map))
         self.unmap_event = Signal(ptr=ffi.addressof(self._ptr.events.unmap))
         self.new_subsurface_event = Signal(
-            ptr=ffi.addressof(self._ptr.events.new_subsurface),
-            data_wrapper=SubSurface,
+            ptr=ffi.addressof(self._ptr.events.new_subsurface), data_wrapper=SubSurface
         )
         self.destroy_event = Signal(ptr=ffi.addressof(self._ptr.events.destroy))
 

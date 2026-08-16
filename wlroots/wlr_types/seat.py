@@ -110,8 +110,7 @@ class Seat(PtrHasData):
             data_wrapper=RequestStartDragEvent,
         )
         self.start_drag_event = Signal(
-            ptr=ffi.addressof(self._ptr.events.start_drag),
-            data_wrapper=Drag,
+            ptr=ffi.addressof(self._ptr.events.start_drag), data_wrapper=Drag
         )
         self.destroy_event = Signal(ptr=ffi.addressof(self._ptr.events.destroy))
 
@@ -399,11 +398,7 @@ class Seat(PtrHasData):
             self._ptr, surface._ptr, time_msec, touch_id, surface_x, surface_y
         )
 
-    def touch_point_clear_focus(
-        self,
-        time_msec: int,
-        touch_id: int,
-    ) -> None:
+    def touch_point_clear_focus(self, time_msec: int, touch_id: int) -> None:
         """Clear the focused surface for the touch point given by `touch_id`."""
         lib.wlr_seat_touch_point_clear_focus(self._ptr, time_msec, touch_id)
 
@@ -644,10 +639,7 @@ class SeatTouchState(Ptr):
     @property
     def touch_points(self) -> Iterator[TouchPoint]:
         for ptr in wl_list_for_each(
-            "struct wlr_touch_point *",
-            self._ptr.touch_points,
-            "link",
-            ffi=ffi,
+            "struct wlr_touch_point *", self._ptr.touch_points, "link", ffi=ffi
         ):
             yield TouchPoint(ptr)
 

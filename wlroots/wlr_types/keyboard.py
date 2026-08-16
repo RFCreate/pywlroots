@@ -46,8 +46,7 @@ class ModifiersMask:
         """
         idx = ffi.new("xkb_mod_index_t *")
         idx[0] = lib.xkb_keymap_mod_get_index(
-            self._keyboard.keymap,
-            ffi.new("const char []", modifier.encode("ascii")),
+            self._keyboard.keymap, ffi.new("const char []", modifier.encode("ascii"))
         )
         self._mask[0] |= self._one[0] << idx[0]
 

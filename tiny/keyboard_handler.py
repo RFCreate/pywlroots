@@ -15,10 +15,7 @@ if TYPE_CHECKING:
 
 class KeyboardHandler:
     def __init__(
-        self,
-        keyboard: Keyboard,
-        input_device: InputDevice,
-        tinywl_server: TinywlServer,
+        self, keyboard: Keyboard, input_device: InputDevice, tinywl_server: TinywlServer
     ) -> None:
         self.keyboard = keyboard
         self.input_device = input_device

@@ -24,9 +24,7 @@ class RelativePointerManagerV1(Ptr):
         """
         self._ptr = lib.wlr_relative_pointer_manager_v1_create(display._ptr)
 
-        self.destroy_event = Signal(
-            ptr=ffi.addressof(self._ptr.events.destroy),
-        )
+        self.destroy_event = Signal(ptr=ffi.addressof(self._ptr.events.destroy))
         self.new_relative_pointer_event = Signal(
             ptr=ffi.addressof(self._ptr.events.new_relative_pointer),
             data_wrapper=RelativePointerV1,

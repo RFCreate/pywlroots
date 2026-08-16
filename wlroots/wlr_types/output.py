@@ -85,10 +85,7 @@ class Output(PtrHasData):
     @property
     def modes(self) -> Iterator[OutputMode]:
         for ptr in wl_list_for_each(
-            "struct wlr_output_mode *",
-            self._ptr.modes,
-            "link",
-            ffi=ffi,
+            "struct wlr_output_mode *", self._ptr.modes, "link", ffi=ffi
         ):
             yield OutputMode(ptr)
 

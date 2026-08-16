@@ -28,12 +28,7 @@ from .pointer import (
     PointerSwipeEndEvent,
     PointerSwipeUpdateEvent,
 )
-from .touch import (
-    TouchCancelEvent,
-    TouchDownEvent,
-    TouchMotionEvent,
-    TouchUpEvent,
-)
+from .touch import TouchCancelEvent, TouchDownEvent, TouchMotionEvent, TouchUpEvent
 
 if TYPE_CHECKING:
     from .xcursor_manager import XCursorManager
@@ -124,12 +119,10 @@ class Cursor(PtrHasData):
             data_wrapper=PointerHoldEndEvent,
         )
         self.touch_up_event = Signal(
-            ptr=ffi.addressof(self._ptr.events.touch_up),
-            data_wrapper=TouchUpEvent,
+            ptr=ffi.addressof(self._ptr.events.touch_up), data_wrapper=TouchUpEvent
         )
         self.touch_down_event = Signal(
-            ptr=ffi.addressof(self._ptr.events.touch_down),
-            data_wrapper=TouchDownEvent,
+            ptr=ffi.addressof(self._ptr.events.touch_down), data_wrapper=TouchDownEvent
         )
         self.touch_motion_event = Signal(
             ptr=ffi.addressof(self._ptr.events.touch_motion),
@@ -139,20 +132,18 @@ class Cursor(PtrHasData):
             ptr=ffi.addressof(self._ptr.events.touch_cancel),
             data_wrapper=TouchCancelEvent,
         )
-        self.touch_frame_event = Signal(
-            ptr=ffi.addressof(self._ptr.events.touch_frame),
-        )
+        self.touch_frame_event = Signal(ptr=ffi.addressof(self._ptr.events.touch_frame))
         self.tablet_tool_axis_event = Signal(
-            ptr=ffi.addressof(self._ptr.events.tablet_tool_axis),
+            ptr=ffi.addressof(self._ptr.events.tablet_tool_axis)
         )
         self.tablet_tool_proximity_event = Signal(
-            ptr=ffi.addressof(self._ptr.events.tablet_tool_proximity),
+            ptr=ffi.addressof(self._ptr.events.tablet_tool_proximity)
         )
         self.tablet_tool_tip_event = Signal(
-            ptr=ffi.addressof(self._ptr.events.tablet_tool_tip),
+            ptr=ffi.addressof(self._ptr.events.tablet_tool_tip)
         )
         self.tablet_tool_button_event = Signal(
-            ptr=ffi.addressof(self._ptr.events.tablet_tool_button),
+            ptr=ffi.addressof(self._ptr.events.tablet_tool_button)
         )
 
     @property
@@ -197,11 +188,7 @@ class Cursor(PtrHasData):
         lib.wlr_cursor_detach_input_device(self._ptr, input_device._ptr)
 
     def move(
-        self,
-        delta_x: float,
-        delta_y: float,
-        *,
-        input_device: InputDevice | None = None,
+        self, delta_x: float, delta_y: float, *, input_device: InputDevice | None = None
     ) -> None:
         """Move the cursor in the direction of the given x and y layout coordinates
 

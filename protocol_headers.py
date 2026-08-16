@@ -130,8 +130,7 @@ def parse_args(
 
 
 def resolve_protocols(
-    wayland_dir: pathlib.Path | None = None,
-    wlroots_dir: pathlib.Path | None = None,
+    wayland_dir: pathlib.Path | None = None, wlroots_dir: pathlib.Path | None = None
 ) -> list[pathlib.Path]:
     if wayland_dir is None:
         wayland_dir = get_wayland_protocols_dir()

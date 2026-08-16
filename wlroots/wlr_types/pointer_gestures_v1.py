@@ -27,37 +27,24 @@ class PointerGesturesV1(PtrHasData):
 
     def send_swipe_begin(self, seat: Seat, time_msec: int, fingers: int) -> None:
         lib.wlr_pointer_gestures_v1_send_swipe_begin(
-            self._ptr,
-            seat._ptr,
-            time_msec,
-            fingers,
+            self._ptr, seat._ptr, time_msec, fingers
         )
 
     def send_swipe_update(
         self, seat: Seat, time_msec: int, dx: float, dy: float
     ) -> None:
         lib.wlr_pointer_gestures_v1_send_swipe_update(
-            self._ptr,
-            seat._ptr,
-            time_msec,
-            dx,
-            dy,
+            self._ptr, seat._ptr, time_msec, dx, dy
         )
 
     def send_swipe_end(self, seat: Seat, time_msec: int, cancelled: bool) -> None:
         lib.wlr_pointer_gestures_v1_send_swipe_end(
-            self._ptr,
-            seat._ptr,
-            time_msec,
-            cancelled,
+            self._ptr, seat._ptr, time_msec, cancelled
         )
 
     def send_pinch_begin(self, seat: Seat, time_msec: int, fingers: int) -> None:
         lib.wlr_pointer_gestures_v1_send_pinch_begin(
-            self._ptr,
-            seat._ptr,
-            time_msec,
-            fingers,
+            self._ptr, seat._ptr, time_msec, fingers
         )
 
     def send_pinch_update(
@@ -70,35 +57,20 @@ class PointerGesturesV1(PtrHasData):
         rotation: float,
     ) -> None:
         lib.wlr_pointer_gestures_v1_send_pinch_update(
-            self._ptr,
-            seat._ptr,
-            time_msec,
-            dx,
-            dy,
-            scale,
-            rotation,
+            self._ptr, seat._ptr, time_msec, dx, dy, scale, rotation
         )
 
     def send_pinch_end(self, seat: Seat, time_msec: int, cancelled: bool) -> None:
         lib.wlr_pointer_gestures_v1_send_pinch_end(
-            self._ptr,
-            seat._ptr,
-            time_msec,
-            cancelled,
+            self._ptr, seat._ptr, time_msec, cancelled
         )
 
     def send_hold_begin(self, seat: Seat, time_msec: int, fingers: int) -> None:
         lib.wlr_pointer_gestures_v1_send_hold_begin(
-            self._ptr,
-            seat._ptr,
-            time_msec,
-            fingers,
+            self._ptr, seat._ptr, time_msec, fingers
         )
 
     def send_hold_end(self, seat: Seat, time_msec: int, cancelled: bool) -> None:
         lib.wlr_pointer_gestures_v1_send_hold_end(
-            self._ptr,
-            seat._ptr,
-            time_msec,
-            cancelled,
+            self._ptr, seat._ptr, time_msec, cancelled
         )

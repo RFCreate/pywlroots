@@ -30,12 +30,10 @@ class Drag(PtrHasData):
 
         self.focus_event = Signal(ptr=ffi.addressof(self._ptr.events.focus))
         self.motion_event = Signal(
-            ptr=ffi.addressof(self._ptr.events.motion),
-            data_wrapper=DragMotionEvent,
+            ptr=ffi.addressof(self._ptr.events.motion), data_wrapper=DragMotionEvent
         )
         self.drop_event = Signal(
-            ptr=ffi.addressof(self._ptr.events.drop),
-            data_wrapper=DragDropEvent,
+            ptr=ffi.addressof(self._ptr.events.drop), data_wrapper=DragDropEvent
         )
         self.destroy_event = Signal(ptr=ffi.addressof(self._ptr.events.destroy))
 

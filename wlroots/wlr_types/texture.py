@@ -40,19 +40,14 @@ class Texture(Ptr):
         return Texture(ptr)
 
     @staticmethod
-    def from_buffer(
-        renderer: Renderer,
-        buffer: Buffer,
-    ) -> Texture:
+    def from_buffer(renderer: Renderer, buffer: Buffer) -> Texture:
         """Create a new texture from a wlr_buffer."""
         ptr = lib.wlr_texture_from_buffer(renderer._ptr, buffer._ptr)
         ptr = ffi.gc(ptr, lib.wlr_texture_destroy)
         return Texture(ptr)
 
     def update_from_buffer(
-        self,
-        buffer: Buffer,
-        damage: PixmanRegion32 | None = None,
+        self, buffer: Buffer, damage: PixmanRegion32 | None = None
     ) -> bool:
         """
         Update a texture with a struct wlr_buffer's contents.
