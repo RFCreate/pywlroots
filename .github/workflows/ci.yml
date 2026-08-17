@@ -7,7 +7,7 @@ on:
 jobs:
   build-wayland:
     name: Build Wayland libraries
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     env:
       wayland-version: "1.23.0"
       wayland-protocols-version: "1.36"
@@ -99,7 +99,7 @@ jobs:
           if-no-files-found: error
   unit-test:
     name: Python ${{ matrix.python-version}} unit tests
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     needs: build-wayland
     strategy:
       fail-fast: false
@@ -175,7 +175,7 @@ jobs:
           WLR_RENDERER_ALLOW_SOFTWARE: '1'
   pre-commit-test:
     name: pre-commit tests
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     needs: build-wayland
     env:
       python-version: "3.14"
@@ -206,7 +206,7 @@ jobs:
           pre-commit run --show-diff-on-failure --color=always --all-files
   packaging-test:
     name: packaging tests
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     needs: build-wayland
     env:
       python-version: "3.14"
@@ -241,7 +241,7 @@ jobs:
           twine check dist/*
   protocol-headers-test:
     name: protocol headers test
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     needs: build-wayland
     env:
       python-version: "3.14"
