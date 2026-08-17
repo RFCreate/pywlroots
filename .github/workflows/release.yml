@@ -11,16 +11,16 @@ jobs:
     runs-on: ubuntu-26.04
     container: quay.io/pypa/manylinux_2_34_x86_64
     env:
-      libdrm-version: "2.4.121"
-      seatd-version: "0.6.3"
-      pixman-version: "0.42.0"
-      xkbcommon-version: "1.7.0"
-      xwayland-version: "22.1.9"
-      xcvt-version: "0.1.2"
-      inputproto-version: "2021.5"
-      wayland-protocols-version: "1.36"
-      wayland-version: "1.23.0"
-      wlroots-version: "0.17.4"
+      libdrm-version: "2.4.134"
+      seatd-version: "0.9.3"
+      pixman-version: "0.46.4"
+      xkbcommon-version: "1.13.1"
+      xwayland-version: "24.1.13"
+      xcvt-version: "0.1.3"
+      inputproto-version: "2025.1"
+      wayland-protocols-version: "1.49"
+      wayland-version: "1.26.0"
+      wlroots-version: "0.20.2"
     steps:
       - name: Install dependencies
         run: |
@@ -87,7 +87,7 @@ jobs:
           XCVT_URL: https://gitlab.freedesktop.org/xorg/lib/libxcvt/-/archive/libxcvt-${{ env.xcvt-version }}/libxcvt-libxcvt-${{ env.xcvt-version }}.tar.gz
           INPUTPROTO_URL: https://gitlab.freedesktop.org/xorg/proto/xorgproto/-/archive/xorgproto-${{ env.inputproto-version}}/xorgproto-xorgproto-${{ env.inputproto-version}}.tar.gz
           LIBDRM_URL: https://gitlab.freedesktop.org/mesa/libdrm/-/archive/libdrm-${{ env.libdrm-version }}/libdrm-libdrm-${{ env.libdrm-version }}.tar.gz
-          SEATD_URL: https://git.sr.ht/~kennylevinsen/seatd/archive/${{ env.seatd-version }}.tar.gz
+          SEATD_URL: https://github.com/kennylevinsen/seatd/archive/refs/tags/${{ env.seatd-version }}.tar.gz
           PIXMAN_URL: https://gitlab.freedesktop.org/pixman/pixman/-/archive/pixman-${{ env.pixman-version }}/pixman-pixman-${{ env.pixman-version }}.tar.bz2
           WLROOTS_URL: https://gitlab.freedesktop.org/wlroots/wlroots/-/archive/${{ env.wlroots-version }}/wlroots-${{ env.wlroots-version }}.tar.gz
       - name: Install meson

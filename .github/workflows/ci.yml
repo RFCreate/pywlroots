@@ -9,12 +9,12 @@ jobs:
     name: Build Wayland libraries
     runs-on: ubuntu-26.04
     env:
-      wayland-version: "1.23.0"
-      wayland-protocols-version: "1.36"
+      wayland-version: "1.26.0"
+      wayland-protocols-version: "1.49"
     strategy:
       fail-fast: false
       matrix:
-        wlroots-version: ["0.17.4"]
+        wlroots-version: ["0.20.2"]
     steps:
       - name: Install dependencies
         run: |
@@ -111,7 +111,7 @@ jobs:
           - "3.13"
           - "3.14"
           - "pypy-3.11"
-        wlroots-version: ["0.17.4"]
+        wlroots-version: ["0.20.2"]
     steps:
       - name: Download wayland libraries
         uses: actions/download-artifact@v7
@@ -179,7 +179,7 @@ jobs:
     needs: build-wayland
     env:
       python-version: "3.14"
-      wlroots-version: "0.17.4"
+      wlroots-version: "0.20.2"
     steps:
       - name: Install dependencies
         run: |
@@ -210,7 +210,7 @@ jobs:
     needs: build-wayland
     env:
       python-version: "3.14"
-      wlroots-version: "0.17.4"
+      wlroots-version: "0.20.2"
     steps:
       - name: Download wayland libraries
         uses: actions/download-artifact@v7
@@ -245,7 +245,7 @@ jobs:
     needs: build-wayland
     env:
       python-version: "3.14"
-      wlroots-version: "0.17.4"
+      wlroots-version: "0.20.2"
     steps:
       - name: Download wayland libraries
         uses: actions/download-artifact@v7
